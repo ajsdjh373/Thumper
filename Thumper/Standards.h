@@ -78,7 +78,7 @@ Safeties and known issues:
 For variables:
 firstSecond_modifier
 
-For functions, name spaces, enums:
+For functions, name spaces, enums, classes:
 FirstSecond_Modifier
 
 Acronyms and shortened words are always all caps

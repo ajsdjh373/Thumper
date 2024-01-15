@@ -8,32 +8,42 @@ int CALLBACK WinMain(
 	LPSTR     lpCmdLine,
 	int       nCmdShow)
 {
-	WIN::Window testWin;
-	std::string allReceivedKeys = "";
-	testWin.SetTitle(L"test 2");
-	while (true) 
+	try
 	{
-		// process all messages pending, but to not block for new messages
-		if (const auto ecode = WIN::Window::ProcessMessageQue())
+		WIN::Window testWin;
+		std::string allReceivedKeys = "";
+		testWin.SetTitle(L"test 2");
+		while (true)
 		{
-			// if return optional has value, means we're quitting so return exit code
-			//return *ecode;
-			return 0;
-		}
+			// process all messages pending, but to not block for new messages
+			if (const auto ecode = WIN::Window::ProcessMessageQue())
+			{
+				// if return optional has value, means we're quitting so return exit code
+				//return *ecode;
+				return 0;
+			}
 
-		bool GDown = testWin.kbd.CheckRaw(KBDRAW::SemiColon)->Down;
-		bool ColonDown = testWin.kbd.CheckASCII(KBDASCII::VerticalBar)->Down;
-		if (GDown || ColonDown)
-		{
-			testWin.SetTitle(L"good");
-		}
-		else
-		{
-			testWin.SetTitle(L"nah");
-		}
+			bool GDown = testWin.kbd.CheckRaw(KBDRAW::SemiColon)->Down;
+			bool ColonDown = testWin.kbd.CheckASCII(KBDASCII::VerticalBar)->Down;
+			if (GDown || ColonDown)
+			{
+				testWin.SetTitle(L"good");
+			}
+			else
+			{
+				testWin.SetTitle(L"nah");
+			}
 
-	};
+		};
 
-	return 0;
+		return 0;
+
+	}
+	catch (const std::exception&)
+	{
+		// otherwise unhandled exception from the rest of the program, constitutes a critical error for the program
+		return 1;
+	}
 	
+	return 1;
 }

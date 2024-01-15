@@ -8,6 +8,7 @@ See associated header file for more information
 #include "WIN_Window.h"
 #include <windowsx.h>
 #include <memory>
+#include <stdexcept>
 
 /*
 Constructor
@@ -46,7 +47,10 @@ WIN::Window::Window() :
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = className.c_str();
 	wc.hIconSm = nullptr;
-	RegisterClassExW(&wc);
+	if (RegisterClassExW(&wc) == 0)
+	{
+		throw std::runtime_error("RegisterClassExW failed");
+	}
 
 	// adjust actual window size so that width and height represent the usuable area not the total window size
 	RECT wr;
@@ -56,7 +60,7 @@ WIN::Window::Window() :
 	wr.bottom = height + wr.top;
 	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
 	{
-		//throw CHWND_LAST_EXCEPT();
+		throw std::runtime_error("AdjustWindowRect failed");
 	}
 
 	// create the window
@@ -74,6 +78,10 @@ WIN::Window::Window() :
 		hInst,
 		this
 	);
+	if (hWnd == NULL)
+	{
+		throw std::runtime_error("CreateWindowExW failed");
+	}
 
 	// show the window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
@@ -94,6 +102,7 @@ Safeties and known issues:
 */
 WIN::Window::~Window()
 {
+	// both of these functions can have errors, but IDK what to do with them so I'll ignore them
 	DestroyWindow(hWnd);
 	UnregisterClassW(className.c_str(), hInst);
 }
@@ -115,7 +124,7 @@ void WIN::Window::SetTitle(const std::wstring& title)
 {
 	if (SetWindowTextW(hWnd, title.c_str()) == 0)
 	{
-		//throw CHWND_LAST_EXCEPT(); will get added later
+		throw std::runtime_error("WIN::Window::SetTitle failed");
 	}
 }
 
