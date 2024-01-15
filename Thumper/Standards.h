@@ -3,7 +3,7 @@
 // for h files
 /*
 Author: Nathan Dunn
-Module: GFX_3D
+Module: module name
 
 Functional description and intended use
 
@@ -16,10 +16,12 @@ Known bugs and limitations:
 // for cpp files
 /*
 Author: Nathan Dunn
-Module: GFX_3D
+Module: module name
 
 See associated header file for more information
 */
+
+// includes: windows includes (WinWrapper.h), then C++ standard libraries, then external dependencies, then other module dependencies, then in module dependencies
 
 // forward declare classes at the beginning of every header file
 // use the namespace for that module
@@ -32,10 +34,14 @@ namespace EX
 class EX::EXClass
 {
 public:
+	// public member types
+
+private:
+	// private member types
+
+public:
 	// public member functions
-	// constructors
-	// destructors
-	// everything else
+	// constructors first, then destructors, then everything else
 
 private:
 	// private member functions
@@ -65,4 +71,15 @@ Safeties and known issues:
 - b
 - c
 
+*/
+
+// Naming
+/*
+For variables:
+firstSecond_modifier
+
+For functions, name spaces, enums:
+FirstSecond_Modifier
+
+Acronyms and shortened words are always all caps
 */
