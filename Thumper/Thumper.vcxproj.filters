@@ -25,6 +25,18 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="G3D">
+      <UniqueIdentifier>{d5150910-f9c7-4a6c-a4ae-4ce6d7d18c48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="G3D\Header Files">
+      <UniqueIdentifier>{ec3363b3-f4f5-4f85-8ede-6a7374029a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="G3D\Source Files">
+      <UniqueIdentifier>{efc9f9ba-ab50-4093-9f6f-fb91dd37dc59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="G3D\Shaders">
+      <UniqueIdentifier>{e8f0d58a-5bf2-4bd8-b212-8924c9b726da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -38,6 +50,21 @@
     </ClCompile>
     <ClCompile Include="WIN_Mouse.cpp">
       <Filter>WIN\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Shader_Texture.cpp">
+      <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Camera.cpp">
+      <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Obj_Tile.cpp">
+      <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_RenderEngine.cpp">
+      <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Texture2D.cpp">
+      <Filter>G3D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,5 +86,31 @@
     <ClInclude Include="WIN_Mouse.h">
       <Filter>WIN\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="G3D_Shader_Texture.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_Camera.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_Obj_Tile.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_RenderEngine.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_Texture2D.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_Utilities.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="TexturePS.hlsl">
+      <Filter>G3D\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TextureVS.hlsl">
+      <Filter>G3D\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

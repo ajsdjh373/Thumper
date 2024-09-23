@@ -1,5 +1,5 @@
 #pragma once
 
 /*
-Next: add window error handling (missing handles, hresult?)
+Next: finish porting GFX_3D to G3D then implement and test
 */
