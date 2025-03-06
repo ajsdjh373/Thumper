@@ -25,7 +25,8 @@ Known bugs and limitations:
 */
 
 #pragma once
-#include <Windows.h> // many things depend on this include
+#include "WIN_WinWrapper.h" // if I get windows lib problems, try switching back to windows.h
+//#include <Windows.h> // many things depend on this include
 #include <d3d11.h>
 #include <wrl.h>
 #include "G3D_Camera.h"

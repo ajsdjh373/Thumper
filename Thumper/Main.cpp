@@ -1,8 +1,9 @@
 #include "WIN_WinWrapper.h"
-#include "WIN_Window.h"
 #include <string>
 #include <chrono>
 #include <thread>
+#include "WIN_Window.h"
+#include "G3D_Include.h"
 
 int CALLBACK WinMain(
 	HINSTANCE hInstance,

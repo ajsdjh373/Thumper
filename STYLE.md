@@ -1,6 +1,14 @@
-#pragma once
+# Formatting
 
-// for h files
+## Filenames
+Filenames depend on the module they belong to. Modules are indicated by a uniform 3 digit, all caps prefix followed by an underscore before the rest of the filename. The filename (excluding the extension) is the same for .h files and the matching .cpp files. All .cpp files must have a matching .h file, but not all .h files must have a matching .cpp file.
+
+The exceptions to this are:
+- File types other than .h and .cpp
+- Main.cpp
+
+## For header files
+Comment to appear at the beginning of .h files:
 /*
 Author: Nathan Dunn
 Module: module name
@@ -13,7 +21,8 @@ Known bugs and limitations:
 - c
 */
 
-// for cpp files
+## For .cpp files
+Comment to appear at the beginning of .cpp files:
 /*
 Author: Nathan Dunn
 Module: module name
@@ -21,10 +30,18 @@ Module: module name
 See associated header file for more information
 */
 
-// includes: windows includes (WinWrapper.h), then C++ standard libraries, then external dependencies, then other module dependencies, then in module dependencies
+## Include statements
+Include in the order of:
+1. windows includes (WinWrapper.h)
+2. C++ standard libraries
+3. other external dependencies
+4. internal dependencies originating from a module other than the module the file belongs to
+5. in module dependencies
 
-// forward declare classes at the beginning of every header file
-// use the namespace for that module
+## Namespaces, classes, and functions
+Forward declare classes at the beginning of every header file
+
+Use the namespace for that module:
 namespace EX
 {
 	class EXClass; 
@@ -73,7 +90,7 @@ Safeties and known issues:
 
 */
 
-// Naming
+## Object and function naming
 /*
 For variables:
 firstSecond_modifier
