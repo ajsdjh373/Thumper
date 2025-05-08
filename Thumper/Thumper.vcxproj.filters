@@ -37,6 +37,15 @@
     <Filter Include="G3D\Shaders">
       <UniqueIdentifier>{e8f0d58a-5bf2-4bd8-b212-8924c9b726da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ERR">
+      <UniqueIdentifier>{9f40d15f-4d7b-496d-b766-2532baff694c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ERR\Source Files">
+      <UniqueIdentifier>{24a7efef-22ec-48b3-87e0-dcc8d2136d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ERR\Header Files">
+      <UniqueIdentifier>{749f1cd0-58e3-489a-8c37-af776c3de5d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -65,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="G3D_Texture2D.cpp">
       <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ERR_ErrorEngine.cpp">
+      <Filter>ERR\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +116,12 @@
     <ClInclude Include="G3D_Utilities.h">
       <Filter>G3D\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="G3D_Include.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ERR_ErrorEngine.h">
+      <Filter>ERR\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="TexturePS.hlsl">
@@ -112,5 +130,12 @@
     <FxCompile Include="TextureVS.hlsl">
       <Filter>G3D\Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+    <None Include="..\STYLE.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\ToDo.txt" />
   </ItemGroup>
 </Project>

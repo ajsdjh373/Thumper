@@ -4,6 +4,7 @@
 #include <thread>
 #include "WIN_Window.h"
 #include "G3D_Include.h"
+#include "ERR_ErrorEngine.h"
 
 int CALLBACK WinMain(
 	HINSTANCE hInstance,
@@ -13,23 +14,48 @@ int CALLBACK WinMain(
 {
 	try
 	{
+		ERR::errorTracker.PrintToLog("window init successful");
+
 		// temporary clock stuff
 		int inputPeriod_ms = 25;
 		long long lastTime_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		long long nextTime_ms = 0;
 
+		// window
 		WIN::Window testWin;
 		std::string allReceivedKeys = "";
 		testWin.SetTitle(L"test 2");
+
+		// G3D testing
+		// renderer
+		// texture
+		// shader
+		// tile obj
+		// camera, set renderer to use camera
+
+		// main loop
 		while (true)
 		{
+			// loop timing code
+			/* I tried doing a solution using:
+			
 			nextTime_ms = lastTime_ms + inputPeriod_ms;
 			if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() < nextTime_ms)
 			{
 				std::this_thread::sleep_until(std::chrono::steady_clock::time_point(std::chrono::milliseconds(nextTime_ms)));
 			}
-			lastTime_ms = nextTime_ms;
+			lastTime_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
+			But that turned out to be quite imprecise. For a superior timer solution, I should probably sleep for most of the period and spin the while loop for the last 5-10 ms.
+			Getting this timing to be precise is an important part of getting different threads to work at consistent rates.
+
+			Look into timeBeginPeriod() and SetThreadPriority() functions from windows.h to improve the reliability of timing resolution across all machines.
+			
+			*/
+			nextTime_ms = lastTime_ms + inputPeriod_ms;
+			while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() < nextTime_ms) {}
+			lastTime_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+			
 			// process all messages pending, but not block new messages
 			if (const auto ecode = WIN::Window::ProcessMessageQue())
 			{
@@ -48,9 +74,8 @@ int CALLBACK WinMain(
 			{
 				testWin.SetTitle(L"nah");
 			}
-
 			
-			//throw std::runtime_error("Test error: forced exception"); // test for error handling message box
+			
 
 		};
 

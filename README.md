@@ -33,10 +33,13 @@ Rules for comments and formatting are specified in STYLE.md.
 ## Architecture
 
 The project is organized into the following modules:
-- G3D, responsible for 3D graphics
+- ERR (global)
 - WIN, responsible for handling most windows OS functions including the window itself, mouse, keyboard, and windows headers
+- G3D, responsible for 3D graphics
+	- Dependent on WIN, ERR
 - More to be added as development continues
 
 ## Building
 
 The project uses Visual Studio and requires DirectX SDK. Build configurations are available for both Debug and Release modes.
+
