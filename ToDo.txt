@@ -1,13 +1,7 @@
 
-A) instantiate render instance
-D) add an error reporting module used by every other module but WIN
-C) make a resource manager module to load the input from a text file for testing (this is base, like window, so file formats are defined here and G3D must interpret the data)
-B) build new class called G3D::Obj_Basic
-	Three functions
-		Constructor - accepts pointer to a resource object from the resource manager module
-		Create - make all D3D11 calls in one function call, including sub resources
-		Destroy - safely destroy all D3D11 stuff
-		SetDrawState - set flag to draw or not to draw
-		Draw - draw on a frame by frame basis
 
+A) get the tree on screen again
+B) purge the tile abstraction from the code - won't be needed or missed
+C) implement the better timer as a utility module
 
+X) clean comments to utilize word wrap instead of new lines

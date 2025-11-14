@@ -27,7 +27,8 @@ namespace ERR
 enum ERR::ErrorCodes
 {
 	okay = 0,
-	actionFailed = 1
+	actionFailed = 1,
+	hrFailed = 2,
 };
 
 class ERR::ErrorEngine
@@ -44,6 +45,8 @@ class ERR::ErrorEngine
 		ErrorEngine();
 		~ErrorEngine();
 		ERR::ErrorCodes PrintToLog(std::string output);
+		ERR::ErrorCodes TestHR(HRESULT HR);
+		ERR::ErrorCodes TestHR(HRESULT HR, std::string outputOnError);
 
 	private:
 		// private member functions

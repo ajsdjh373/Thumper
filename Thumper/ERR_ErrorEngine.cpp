@@ -8,6 +8,7 @@ See associated header file for more information
 #include "WIN_WinWrapper.h"
 #include <fstream>
 #include <chrono>
+#include <sstream>
 #include "ERR_ErrorEngine.h"
 
 /*
@@ -72,7 +73,7 @@ ERR::ErrorCodes::okay           if successful
 ERR::ErrorCodes::actionFailed   file streaming error
 
 Safeties and known issues:
-- I have no checked to see if the chrono call is safe
+- I have not checked to see if the chrono call is safe
 
 */
 ERR::ErrorCodes ERR::ErrorEngine::PrintToLog(std::string output)
@@ -90,6 +91,79 @@ ERR::ErrorCodes ERR::ErrorEngine::PrintToLog(std::string output)
     
 }
 
+/*
+Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the error and HR.
+
+Arguments:
+- HR		any windows HRESULT
+
+Return:
+ERR::ErrorCodes::okay           if successful
+ERR::ErrorCodes::hrFailed       hr didn't pass windows SUCCEEDED check (is negative)
+
+Safeties and known issues:
+- n/a
+
+*/
+ERR::ErrorCodes TestHR(HRESULT HR)
+{
+    try
+    {
+        if (SUCCEEDED(HR))
+        {
+            return ERR::ErrorCodes::okay;
+        }
+        else
+        {
+            std::stringstream ss;
+            ss << "0x" << std::hex << std::uppercase << HR;
+            PrintToLog("HR failed: " + ss.str());
+            return ERR::ErrorCodes::hrFailed;
+        }
+    }
+    catch (...)
+    {
+        return ERR::ErrorCodes::actionFailed;
+    }
+
+};
+
+/*
+Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the error and HR, followed by the caller's specified output.
+
+Arguments:
+- HR		        any windows HRESULT
+- outputOnError	    optional string to append to the log file if the hr is not successful, defaults to empty string if not provided
+
+Return:
+ERR::ErrorCodes::okay           if successful
+ERR::ErrorCodes::hrFailed       hr didn't pass windows SUCCEEDED check (is negative)
+
+Safeties and known issues:
+- n/a
+
+*/
+ERR::ErrorCodes TestHR(HRESULT HR, std::string outputOnError)
+{
+try
+    {
+        if (SUCCEEDED(HR))
+        {
+            return ERR::ErrorCodes::okay;
+        }
+        else
+        {
+            std::stringstream ss;
+            ss << "0x" << std::hex << std::uppercase << HR;
+            PrintToLog("HR failed: " + ss.str() + " " + outputOnError);
+            return ERR::ErrorCodes::hrFailed;
+        }
+    }
+    catch (...)
+    {
+        return ERR::ErrorCodes::actionFailed;
+    }
+};
 
 /*
 Generates a milliseconds timestamp that should be put before every entry in the log.

@@ -15,7 +15,7 @@ The top level architecture decisions include:
 - Code is abstracted into functional modules with a hierarchal structure that isolates code by functional group
 - Use only D2D for 2D graphics
 - Use only D3D11 for 3D graphics
-- To use an event driven, multithreaded architecture with looping threads able to be set to a maximum looping frequency
+- To use an state machine driven, highly parallel multithreaded architecture focused on minimal abstraction by generalizing function
 
 Some technical limitations are accepted up front:
 - Compatible with Windows 10 and 11 operating systems only
@@ -33,7 +33,7 @@ Rules for comments and formatting are specified in STYLE.md.
 ## Architecture
 
 The project is organized into the following modules:
-- ERR (global)
+- ERR (global), provides an easy way for to log errors or other notes to a central log file
 - WIN, responsible for handling most windows OS functions including the window itself, mouse, keyboard, and windows headers
 - G3D, responsible for 3D graphics
 	- Dependent on WIN, ERR
