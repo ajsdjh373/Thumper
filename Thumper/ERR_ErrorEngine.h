@@ -13,6 +13,7 @@ Known bugs and limitations:
 */
 
 #pragma once
+#include "WIN_WinWrapper.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -21,15 +22,15 @@ Known bugs and limitations:
 namespace ERR
 {
 	class ErrorEngine;
-	enum ErrorCodes;
+	enum ErrorCodes
+	{
+		okay = 0,
+		actionFailed = 1,
+		hrFailed = 2,
+	};
 }
 
-enum ERR::ErrorCodes
-{
-	okay = 0,
-	actionFailed = 1,
-	hrFailed = 2,
-};
+
 
 class ERR::ErrorEngine
 {
@@ -46,7 +47,7 @@ class ERR::ErrorEngine
 		~ErrorEngine();
 		ERR::ErrorCodes PrintToLog(std::string output);
 		ERR::ErrorCodes TestHR(HRESULT HR);
-		ERR::ErrorCodes TestHR(HRESULT HR, std::string outputOnError);
+		ERR::ErrorCodes TestHR(HRESULT HR, const char* file, const char* function, int line);
 
 	private:
 		// private member functions

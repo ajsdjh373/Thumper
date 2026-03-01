@@ -7,13 +7,12 @@ See associated header file for more information
 
 #include <dxgi1_2.h>
 #include "G3D_RenderEngine.h"
+#include "ERR_ErrorEngine.h"
 
 /*
 Constructor
 Do NOT use this constructor directly.
-The only reason the function exists is so that it can be owned as a member variable
-of other classes. In such a scenario, reassign the RenderEngine object to a properly
-constructed object in the constructor of the owner.
+The only reason the function exists is so that it can be owned as a member variable of other classes. In such a scenario, reassign the RenderEngine object to a properly constructed object in the constructor of the owner.
 
 Inputs:
 N/A
@@ -28,7 +27,6 @@ G3D::RenderEngine::RenderEngine()
 }
 
 /*
-Constructor
 Always use this constructor!
 
 Inputs:
@@ -40,38 +38,10 @@ Outputs:
 N/A
 
 */
-G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height, AA_Settings AA_Samples) :
+G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height) :
 	Height{ Height },
 	Width{ Width }
 {
-	// assign AA count based on the specified sample count
-	switch (AA_Samples)
-	{
-	default:
-		AA_SampleCount = 1u;
-		break;
-
-	case AA_1:
-		AA_SampleCount = 1u;
-		break;
-
-	case AA_2:
-		AA_SampleCount = 2u;
-		break;
-
-	case AA_4:
-		AA_SampleCount = 4u;
-		break;
-
-	case AA_8:
-		AA_SampleCount = 8u;
-		break;
-
-	case AA_16:
-		AA_SampleCount = 16u;
-		break;
-	}
-
 	// create device and swap chain
 	UINT DeviceFlags = 0u;
 #ifndef NDEBUG
@@ -98,26 +68,30 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	SwapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	SwapDesc.Flags = 0;
 
-	HR = D3D11CreateDeviceAndSwapChain(
-		NULL,
-		D3D_DRIVER_TYPE_HARDWARE,
-		NULL,
-		DeviceFlags,
-		&DeviceFeatureLevel,
-		1u,
-		D3D11_SDK_VERSION,
-		&SwapDesc,
-		&pSwapChain,
-		&pDevice,
-		NULL,
-		&pImmediateContext
+	ERR::errorTracker.TestHR(
+		D3D11CreateDeviceAndSwapChain(
+			NULL,
+			D3D_DRIVER_TYPE_HARDWARE,
+			NULL,
+			DeviceFlags,
+			&DeviceFeatureLevel,
+			1u,
+			D3D11_SDK_VERSION,
+			&SwapDesc,
+			&pSwapChain,
+			&pDevice,
+			NULL,
+			&pImmediateContext
+		)
+		, __FILE__, __func__, __LINE__
 	);
 
 	// gain access to texture subresource from the swap chain, then create a render target for it
 	// passing a description to CreateRenderTargetView is required if I want to enable mipmaps
 	Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer;
-	HR = pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
-	HR = pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pRenderTarget);
+
+	ERR::errorTracker.TestHR(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer), __FILE__, __func__, __LINE__);
+	ERR::errorTracker.TestHR(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pRenderTarget), __FILE__, __func__, __LINE__);
 
 	// create the depth stencil state and set the context to it
 	D3D11_DEPTH_STENCIL_DESC DSDesc = {};
@@ -125,7 +99,7 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	DSDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState; // this pointer to the state is local
-	pDevice->CreateDepthStencilState(&DSDesc, &pDSState); // this creates the state, which is destroyed when the Device is destroyed
+	ERR::errorTracker.TestHR(pDevice->CreateDepthStencilState(&DSDesc, &pDSState), __FILE__, __func__, __LINE__); // this creates the state, which is destroyed when the Device is destroyed
 	pImmediateContext->OMSetDepthStencilState(pDSState.Get(), 1u);
 
 	// create the texture for the depth stencil to store depth information in
@@ -140,7 +114,7 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	DepthDesc.SampleDesc.Quality = 0u;
 	DepthDesc.Usage = D3D11_USAGE_DEFAULT;
 	DepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	HR = pDevice->CreateTexture2D(&DepthDesc, nullptr, &pDepthStencil);
+	ERR::errorTracker.TestHR(pDevice->CreateTexture2D(&DepthDesc, nullptr, &pDepthStencil), __FILE__, __func__, __LINE__);
 
 	// create the depth stencil's texture (where it stored the data for depths)
 	D3D11_DEPTH_STENCIL_VIEW_DESC DSVDesc = {};
@@ -148,7 +122,7 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	DSVDesc.Texture2D.MipSlice = 0u;
 	DSVDesc.Flags = 0u; // read only specification
-	HR = pDevice->CreateDepthStencilView(pDepthStencil.Get(), &DSVDesc, &pDepthStencilView);
+	HR = ERR::errorTracker.TestHR(pDevice->CreateDepthStencilView(pDepthStencil.Get(), &DSVDesc, &pDepthStencilView), __FILE__, __func__, __LINE__);
 
 	// set the output merger to use the swap chain texture and the depth stencil texture as the output textures
 	pImmediateContext->OMSetRenderTargets(1u, pRenderTarget.GetAddressOf(), pDepthStencilView.Get());
@@ -156,13 +130,9 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	/*
 	Viewports
 
-	I know the viewports can be used to tell what portion of the render target should be
-	rendered in the rasterizer stage, but I have no idea what they do beyond that.
+	I know the viewports can be used to tell what portion of the render target should be rendered in the rasterizer stage, but I have no idea what they do beyond that.
 
-	You can set a very large number of viewports, and the geometry shader can select
-	which one gets used. Why? What is this feature meant for? I have read speculation
-	that it could be used for mirrors and split screen stuff, but the only example I
-	have found that actually used viewports is:
+	You can set a very large number of viewports, and the geometry shader can select which one gets used. Why? What is this feature meant for? I have read speculation that it could be used for mirrors and split screen stuff, but the only example I have found that actually used viewports is:
 	https://stackoverflow.com/questions/64831393/how-to-achieve-split-screen-effect-in-directx11
 
 	*/
@@ -191,7 +161,7 @@ N/A
 */
 void G3D::RenderEngine::PresentFrame()
 {
-	HR = pSwapChain->Present(0u, 0u);
+	HR = ERR::errorTracker.TestHR(pSwapChain->Present(0u, 0u), __FILE__, __func__, __LINE__);
 	// when error handling gets implemented, call pDevice->GetDeviceRemovedReason() like chili did
 
 	// clear the render targets

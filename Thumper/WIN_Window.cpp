@@ -166,6 +166,24 @@ std::optional<int> WIN::Window::ProcessMessageQue() noexcept
 }
 
 /*
+Get the handle to the window.
+
+Arguments:
+N/A
+
+Return:
+HWND		Unmodified handle for the window
+
+Safeties and known issues:
+- This is a copy. The window doesn't know what is currently using the handles, so it can't guarantee that the handle is still valid when the caller uses it.
+
+*/
+HWND WIN::Window::GetHandle() const
+{
+	return hWnd;
+}
+
+/*
 Windows callback function for WNDCLASSEX.lpfnWndProc. This function forwards all message 
 traffic to the default windows procedure until the window is created. Once the window is 
 created, this function is replaced by HandleMsgThunk().

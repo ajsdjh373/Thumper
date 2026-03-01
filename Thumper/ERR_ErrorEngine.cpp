@@ -5,7 +5,8 @@ Module: ERR
 See associated header file for more information
 */
 
-#include "WIN_WinWrapper.h"
+//#include "WIN_WinWrapper.h"
+//#include <Windows.h>
 #include <fstream>
 #include <chrono>
 #include <sstream>
@@ -92,7 +93,7 @@ ERR::ErrorCodes ERR::ErrorEngine::PrintToLog(std::string output)
 }
 
 /*
-Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the error and HR.
+Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the HR and where it failed.
 
 Arguments:
 - HR		any windows HRESULT
@@ -105,7 +106,7 @@ Safeties and known issues:
 - n/a
 
 */
-ERR::ErrorCodes TestHR(HRESULT HR)
+ERR::ErrorCodes ERR::ErrorEngine::TestHR(HRESULT HR)
 {
     try
     {
@@ -117,7 +118,7 @@ ERR::ErrorCodes TestHR(HRESULT HR)
         {
             std::stringstream ss;
             ss << "0x" << std::hex << std::uppercase << HR;
-            PrintToLog("HR failed: " + ss.str());
+            PrintToLog("Bad HR: " + ss.str());
             return ERR::ErrorCodes::hrFailed;
         }
     }
@@ -129,11 +130,13 @@ ERR::ErrorCodes TestHR(HRESULT HR)
 };
 
 /*
-Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the error and HR, followed by the caller's specified output.
+Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the HR and where it failed. Also accepts possible macro entries for line, file, and function.
 
 Arguments:
-- HR		        any windows HRESULT
-- outputOnError	    optional string to append to the log file if the hr is not successful, defaults to empty string if not provided
+- HR		any windows HRESULT
+- file      result of __FILE__
+- function  result of __func__
+- line      result of __LINE__
 
 Return:
 ERR::ErrorCodes::okay           if successful
@@ -143,9 +146,9 @@ Safeties and known issues:
 - n/a
 
 */
-ERR::ErrorCodes TestHR(HRESULT HR, std::string outputOnError)
+ERR::ErrorCodes ERR::ErrorEngine::TestHR(HRESULT HR, const char* file, const char* function, int line)
 {
-try
+    try
     {
         if (SUCCEEDED(HR))
         {
@@ -155,7 +158,7 @@ try
         {
             std::stringstream ss;
             ss << "0x" << std::hex << std::uppercase << HR;
-            PrintToLog("HR failed: " + ss.str() + " " + outputOnError);
+            PrintToLog("Bad HR: " + ss.str() + " " + file + " " + function + " " + std::to_string(line));
             return ERR::ErrorCodes::hrFailed;
         }
     }
@@ -163,6 +166,7 @@ try
     {
         return ERR::ErrorCodes::actionFailed;
     }
+
 };
 
 /*

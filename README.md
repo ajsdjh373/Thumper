@@ -7,7 +7,7 @@ Welcome to Thumper. This is an experimental project that is functioning as chall
 The high level functions provided should include:
 - High level 2D graphics module focused on flexibility and screen compatibility
 - High level 3D graphics module focused on performance and pre-optimized asset compatibility
-- Asset loading, modifying, saving, and version control for all modules that utilize assets
+- Asset loading, modifying, and saving for all modules that utilize assets
 - Input handling for a keyboard and mouse
 - Procedural generation tools for generating assets and in game generation
 
@@ -31,6 +31,8 @@ In the interest of keeping things simple, rules are kept to a minimum.
 Rules for comments and formatting are specified in STYLE.md.
 
 ## Architecture
+
+The project is designed with C++20 and compiled with MSVC.
 
 The project is organized into the following modules:
 - ERR (global), provides an easy way for to log errors or other notes to a central log file

@@ -7,7 +7,7 @@ this, effectively making this module a low level wrapper for the D3D11 API.
 
 In regards to memory management:
 In general, the G3D module manages the interconnection of resources and what is
-done with the resources, but it does not manage the resources itself. It is the
+done with the resources, but it does not manage the resource itself. It is the
 responsibility of the implementor to store resources. This is because the
 management of memory is beyond the scope of graphics, and will change depending on
 what the graphics module is being used to visualize. The notable exception to this
@@ -34,24 +34,14 @@ Known bugs and limitations:
 namespace G3D
 {
 	class RenderEngine; // forward declare so everything doesn't have to be tabbed
-	enum AA_Settings;
 }
-
-enum G3D::AA_Settings
-{
-	AA_1,
-	AA_2,
-	AA_4,
-	AA_8,
-	AA_16
-};
 
 class G3D::RenderEngine
 {
 public:
 	// public member functions
 	RenderEngine();
-	RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height, AA_Settings MSAA_Samples);
+	RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height);
 	void PresentFrame();
 
 	// access functions
@@ -76,8 +66,6 @@ private:
 	// private member variables
 	unsigned short int Width;
 	unsigned short int Height;
-	unsigned int AA_SampleCount;
-	unsigned int AA_AdapterQuality; // not currently used
 	D3D_FEATURE_LEVEL DeviceFeatureLevel;
 	DXGI_FORMAT TextureFormat;
 

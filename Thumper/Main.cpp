@@ -22,12 +22,13 @@ int CALLBACK WinMain(
 		long long nextTime_ms = 0;
 
 		// window
-		WIN::Window testWin;
+		WIN::Window mainWin;
 		std::string allReceivedKeys = "";
-		testWin.SetTitle(L"test 2");
+		mainWin.SetTitle(L"test 2");
 
 		// G3D testing
-		// renderer
+		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
+
 		// texture
 		// shader
 		// tile obj
@@ -64,15 +65,15 @@ int CALLBACK WinMain(
 				return 0;
 			}
 
-			bool GDown = testWin.kbd.CheckRaw(KBDRAW::SemiColon)->Down;
-			bool ColonDown = testWin.kbd.CheckASCII(KBDASCII::VerticalBar)->Down;
+			bool GDown = mainWin.kbd.CheckRaw(KBDRAW::SemiColon)->Down;
+			bool ColonDown = mainWin.kbd.CheckASCII(KBDASCII::VerticalBar)->Down;
 			if (GDown || ColonDown)
 			{
-				testWin.SetTitle(L"good");
+				mainWin.SetTitle(L"good");
 			}
 			else
 			{
-				testWin.SetTitle(L"nah");
+				mainWin.SetTitle(L"nah");
 			}
 			
 			

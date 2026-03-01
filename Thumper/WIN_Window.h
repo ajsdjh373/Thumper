@@ -36,6 +36,7 @@ public:
 	Window& operator=(const Window&) = delete;
 	void SetTitle(const std::wstring& title);
 	static std::optional<int> ProcessMessageQue() noexcept;
+	HWND GetHandle() const;
 
 private:
 	// private member functions
