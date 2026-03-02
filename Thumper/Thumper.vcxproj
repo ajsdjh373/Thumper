@@ -158,8 +158,10 @@
     <ClCompile Include="ERR_ErrorEngine.cpp" />
     <ClCompile Include="G3D_Camera.cpp" />
     <ClCompile Include="G3D_Obj_Tile.cpp" />
+    <ClCompile Include="G3D_Obj_WireFrame.cpp" />
     <ClCompile Include="G3D_RenderEngine.cpp" />
     <ClCompile Include="G3D_Shader_Texture.cpp" />
+    <ClCompile Include="G3D_Shader_WireFrame.cpp" />
     <ClCompile Include="G3D_Texture2D.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="WIN_Keyboard.cpp" />
@@ -171,12 +173,15 @@
     <ClInclude Include="G3D_Camera.h" />
     <ClInclude Include="G3D_Include.h" />
     <ClInclude Include="G3D_Obj_Tile.h" />
+    <ClInclude Include="G3D_Obj_WireFrame.h" />
     <ClInclude Include="G3D_RenderEngine.h" />
     <ClInclude Include="G3D_Shader_Texture.h" />
+    <ClInclude Include="G3D_Shader_WireFrame.h" />
     <ClInclude Include="G3D_Texture2D.h" />
     <ClInclude Include="G3D_Utilities.h" />
     <ClInclude Include="Standards.h" />
     <ClInclude Include="ToDo.h" />
+    <ClInclude Include="UTL_Utilities.h" />
     <ClInclude Include="WIN_Keyboard.h" />
     <ClInclude Include="WIN_Mouse.h" />
     <ClInclude Include="WIN_Window.h" />
@@ -185,23 +190,35 @@
   <ItemGroup>
     <FxCompile Include="TexturePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.1</ShaderModel>
     </FxCompile>
     <FxCompile Include="TextureVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="WireFramePS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="WireFrameVS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

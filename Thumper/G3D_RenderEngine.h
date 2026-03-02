@@ -5,18 +5,15 @@ Module: G3D
 This is the core class for the G3D module. All D3D11 API calls are managed through
 this, effectively making this module a low level wrapper for the D3D11 API.
 
-In regards to memory management:
-In general, the G3D module manages the interconnection of resources and what is
-done with the resources, but it does not manage the resource itself. It is the
-responsibility of the implementor to store resources. This is because the
-management of memory is beyond the scope of graphics, and will change depending on
-what the graphics module is being used to visualize. The notable exception to this
-is vertex and index buffers. Vertex and index buffers are tied to the drawn object,
-ie the map of buffers to objects on screen is 1:1. Even if the buffer is shared, it
-is still 1:1 buffer to unique object (in this instance the buffer would also be
-managed inside the Obj, not externally). Compare this to a shader, where 1 shader
-can map to any number of different objects. When a Vertex or Index buffer can be
-removed, an Empty function will be supplied to do so.
+In regards to memory management and object handling:
+The G3D module manages all objects. You don't create objects directly.
+Call ObjInit() to create an object. This includes the creation of D3D11 resources and by extension involves memory allocation.
+Call ObjDraw() to toggle the object being drawn on screen.
+Call ObjKill() to remove the object from memory entirely (also stopping it from being drawn if it was being drawn).
+Call ObjUpdateAttitude() to provide a new set of 9 DoF attitude data to the object (x, y, z, roll, pitch, yaw, x scale, y scale, z scale).
+Note that there is no function to change the asset data (textures, geometry, etc). This is because the asset data is meant to be static. If you want to change the asset data, create a new object with the new asset data and kill the old one.
+
+Asset data is NOT managed, cached, or in any other way stored in the G3D module other than in the relevant D3D11 resources. G3D does not store references to it - it copies when needed, and that's all. Maintaining this isolation barrier between the G3D functionality and the asset loading system allows for G3D to do whatever it needs to with the asset data without risking concurrency issues (once G3D is moved into its own thread). It also makes ObjInit functions costly due to the necessary memory copying.
 
 Known bugs and limitations:
 - designed for 32 bit operation, all data structures are 32 bit
@@ -29,18 +26,24 @@ Known bugs and limitations:
 //#include <Windows.h> // many things depend on this include
 #include <d3d11.h>
 #include <wrl.h>
+#include <vector>
 #include "G3D_Camera.h"
 
 namespace G3D
 {
-	class RenderEngine; // forward declare so everything doesn't have to be tabbed
+	// avoiding tabs
+	class RenderEngine;
+
+	// avoiding include circular includes
+	//class Obj_WireFrame;
+	//class Shader_WireFrame;
 }
 
 class G3D::RenderEngine
 {
 public:
 	// public member functions
-	RenderEngine();
+	//RenderEngine();
 	RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height);
 	void PresentFrame();
 

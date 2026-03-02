@@ -28,10 +28,20 @@ int CALLBACK WinMain(
 
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
+		// add a wire frame object
+		std::vector<G3D::Vertex_P> vertixXYZ =
+		{
+			{0.0f, 0.0f, 0.0f},
+			{0.5f, 0.0f, 0.0f},
+			{0.5f, 0.5f, 0.0f}
+		};
+		std::vector<unsigned short> indexData =
+		{
+			0, 1, 2
+		};
+		G3D::Obj_WireFrame wireFrameObject{ vertixXYZ ,indexData, renderEngine };
+		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
-		// texture
-		// shader
-		// tile obj
 		// camera, set renderer to use camera
 
 		// main loop
@@ -76,7 +86,10 @@ int CALLBACK WinMain(
 				mainWin.SetTitle(L"nah");
 			}
 			
-			
+			// G3D testing
+			wireFrameShader.Draw(renderEngine);
+			wireFrameObject.Draw(renderEngine);
+			renderEngine.PresentFrame();
 
 		};
 

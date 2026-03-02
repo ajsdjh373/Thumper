@@ -1,14 +1,12 @@
 
 current
-- draw a triangle that is solid orange
+- fix the camera or implement a new camera
 - load a 3D object from a file (download a free one from the internet) (do with new module for asset read/write)
 - get the 3D object drawn on screen
-- get textures working (load and render)
-- get camera working (fixed position and rotation for now)
-- purge the tile abstraction from the code - won't be needed or missed
-
+- implement back culling (triangles facing away from the camera are not drawn)
 
 later
 - clean comments to utilize word wrap instead of new lines
 - add compiler macros __DATE__, __TIME__, __cplusplus to the beginning of the debug log file as a header, plus a release version number
 - implement the better timer as a utility module
+- get textures working (load and render)

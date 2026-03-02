@@ -46,6 +46,15 @@
     <Filter Include="ERR\Header Files">
       <UniqueIdentifier>{749f1cd0-58e3-489a-8c37-af776c3de5d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UTL">
+      <UniqueIdentifier>{0d4fd447-3594-4b49-92b9-43cc6fb40bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UTL\Header Files">
+      <UniqueIdentifier>{70c149f1-9539-4572-822e-6f8d0e3f2171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UTL\Source Files">
+      <UniqueIdentifier>{f79edab3-c685-4113-b37a-11c89905e9c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -77,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="ERR_ErrorEngine.cpp">
       <Filter>ERR\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Obj_WireFrame.cpp">
+      <Filter>G3D\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G3D_Shader_WireFrame.cpp">
+      <Filter>G3D\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,12 +137,27 @@
     <ClInclude Include="ERR_ErrorEngine.h">
       <Filter>ERR\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="G3D_Obj_WireFrame.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UTL_Utilities.h">
+      <Filter>UTL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="G3D_Shader_WireFrame.h">
+      <Filter>G3D\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="TexturePS.hlsl">
       <Filter>G3D\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TextureVS.hlsl">
+      <Filter>G3D\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WireFramePS.hlsl">
+      <Filter>G3D\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WireFrameVS.hlsl">
       <Filter>G3D\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

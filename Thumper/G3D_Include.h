@@ -19,9 +19,11 @@ Known bugs and limitations:
 
 // G3D Objects
 #include "G3D_Obj_Tile.h"
+#include "G3D_Obj_WireFrame.h"
 
 // G3D Shaders
 #include "G3D_Shader_Texture.h"
+#include "G3D_Shader_WireFrame.h"
 
 // G3D Textures
 #include "G3D_Texture2D.h" 

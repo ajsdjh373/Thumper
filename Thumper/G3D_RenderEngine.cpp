@@ -21,10 +21,12 @@ Outputs:
 N/A
 
 */
+/*
 G3D::RenderEngine::RenderEngine()
 {
 
 }
+*/
 
 /*
 Always use this constructor!
@@ -145,7 +147,16 @@ G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const uns
 	VP.TopLeftY = 0.0f;
 	pImmediateContext->RSSetViewports(1u, &VP);
 
-	// I can set D3D11Rasterizer settings here if I want to use something other than the default
+	// the default rasterizer state is to draw wire frames - intended to only be used with Shader_WireFrame. Switch to D3D11_FILL_SOLID for everything else.
+	D3D11_RASTERIZER_DESC RastDesc = {};
+	RastDesc.FillMode = D3D11_FILL_WIREFRAME;
+	RastDesc.CullMode = D3D11_CULL_NONE; // should change
+	RastDesc.FrontCounterClockwise = FALSE;
+	RastDesc.DepthClipEnable = TRUE;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRastState;
+	ERR::errorTracker.TestHR(GetDevice()->CreateRasterizerState(&RastDesc, &pRastState), __FILE__, __func__, __LINE__);
+	pImmediateContext->RSSetState(pRastState.Get()); // call RSSetState again with a different desc to affect subsequent draw calls
+
 }
 
 /*
