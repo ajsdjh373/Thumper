@@ -27,6 +27,7 @@ Known bugs and limitations:
 #include <d3d11.h>
 #include <wrl.h>
 #include <vector>
+#include "G3D_Camera.h"
 
 namespace G3D
 {
@@ -59,6 +60,8 @@ private:
 public:
 	// public member variables
 	
+	G3D::Camera camera;
+
 	// return holder for D3D11 API calls
 	// replace this when error handling is implemented
 	HRESULT HR;

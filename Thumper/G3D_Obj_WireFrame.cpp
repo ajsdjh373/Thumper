@@ -98,19 +98,18 @@ Safeties and known issues:
 
 */
 ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
-	if (constantsNeedMapped)
-	{
-		// mapping the constant buffer
-		D3D11_MAPPED_SUBRESOURCE MSR;
 
-		// map the required element: the transform buffer
-		// note that map and unmap ask for an Subresource, this is the index if multiple were input in the Set function for that resource
-		ERR::errorTracker.TestHR(re.GetImmediateContext()->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &MSR), __FILE__, __func__, __LINE__);
-		memcpy(MSR.pData, &Transform, sizeof(DirectX::XMMATRIX));
-		re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
+	// combine model transform with current camera matrix
+	DirectX::XMMATRIX finalTransform = Transform * re.camera.GetMatrix(re.GetWidth(), re.GetHeight());
 
-		constantsNeedMapped = false;
-	}
+	// mapping the constant buffer
+	D3D11_MAPPED_SUBRESOURCE MSR;
+
+	// map the transform buffer
+	// note that map and unmap ask for an Subresource, this is the index if multiple were input in the Set function for that resource
+	ERR::errorTracker.TestHR(re.GetImmediateContext()->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &MSR), __FILE__, __func__, __LINE__);
+	memcpy(MSR.pData, &finalTransform, sizeof(DirectX::XMMATRIX));
+	re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
 
 	// vertex buffer
 	const unsigned int VertexSize = sizeof(UTL::point);
@@ -147,7 +146,6 @@ Safeties and known issues:
 */
 void G3D::Obj_WireFrame::UpdateAttitude(UTL::attitude& attitude)
 {
-	Transform = DirectX::XMMatrixScaling(attitude.xScale, attitude.yScale, attitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(attitude.pitch, attitude.yaw, attitude.roll) * DirectX::XMMatrixTranslation(attitude.x, attitude.y, attitude.z);
+	Transform = DirectX::XMMatrixScaling(attitude.xScale, attitude.yScale, attitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(-attitude.roll, -attitude.pitch, -attitude.yaw) * DirectX::XMMatrixTranslation(-attitude.x, -attitude.y, -attitude.z);
 	Transform = DirectX::XMMatrixTranspose(Transform);
-	constantsNeedMapped = true; // flag for Draw function
 }

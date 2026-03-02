@@ -42,7 +42,8 @@ int CALLBACK WinMain(
 		G3D::Obj_WireFrame wireFrameObject{ vertixXYZ ,indexData, renderEngine };
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
-		// camera, set renderer to use camera
+		// camera
+		UTL::attitude cameraAttitude{ -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1 };
 
 		// main loop
 		while (true)
@@ -85,8 +86,35 @@ int CALLBACK WinMain(
 			{
 				mainWin.SetTitle(L"nah");
 			}
+
+			// camera keyboard controls
+			if (mainWin.kbd.CheckASCII(KBDASCII::w)->Down)
+			{
+				cameraAttitude.x += 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::s)->Down)
+			{
+				cameraAttitude.x -= 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
+			{
+				cameraAttitude.y += 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
+			{
+				cameraAttitude.y -= 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
+			{
+				cameraAttitude.z += 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
+			{
+				cameraAttitude.z -= 0.01;
+			}
 			
 			// G3D testing
+			renderEngine.camera.Update(cameraAttitude);
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();

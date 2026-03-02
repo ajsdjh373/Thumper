@@ -23,11 +23,11 @@ Safeties and known issues:
 - N/A
 
 */
-G3D::Camera::Camera(UTL::attitude attitude, float nearPlane, float farPlane, float fov) :
+G3D::Camera::Camera(UTL::attitude attitude, float nearPlane, float farPlane, float fovDegrees) :
 	attitude{ attitude },
 	nearPlane{ nearPlane },
 	farPlane{ farPlane },
-	fov{ fov }
+	fovDegrees{ fovDegrees }
 {}
 
 /*
@@ -61,12 +61,12 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::attitude attitude, float nearPlane, float farPlane, float fov)
+void G3D::Camera::Update(UTL::attitude attitude, float nearPlane, float farPlane, float fovDegrees)
 {
 	this->attitude = attitude;
 	this->farPlane = farPlane;
 	this->nearPlane = nearPlane;
-	this->fov = fov;
+	this->fovDegrees = fovDegrees;
 }
 
 /*
@@ -82,22 +82,22 @@ Safeties and known issues:
 - N/A
 
 */
-DirectX::XMMATRIX G3D::Camera::GetMatrix(G3D::RenderEngine& re) const noexcept
+DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
 {
 	// build orientation quaternion from attitude euler angles
 	DirectX::XMVECTOR orientationQuat = DirectX::XMQuaternionRotationRollPitchYaw(
-		attitude.pitch,
-		attitude.yaw,
-		attitude.roll
+		-attitude.roll,
+		-attitude.pitch,
+		-attitude.yaw
 	);
-
+	/*
 	// derive forward and up vectors from the quaternion
 	DirectX::XMVECTOR forward = DirectX::XMVector3Rotate(
-		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
+		DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f),
 		orientationQuat
 	);
 	DirectX::XMVECTOR up = DirectX::XMVector3Rotate(
-		DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
+		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
 		orientationQuat
 	);
 
@@ -109,12 +109,28 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(G3D::RenderEngine& re) const noexcept
 		0.0f
 	);
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(position, forward, up);
+	*/
+	// build rotation matrix from quaternion, then invert it for the view
+	// the view matrix is the inverse of the camera's world transform
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(orientationQuat);
+
+	// translation matrix for camera position
+	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
+		-attitude.x,
+		-attitude.y,
+		-attitude.z
+	);
+
+	// view matrix = translate to origin first, then rotate
+	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix;
 
 	// build projection matrix from camera properties
-	float nearPlaneSize = 2.0f * nearPlane * tan(0.5f * fov * 3.1415f / 180.0f);
+	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
+	float nearPlaneHeight = 2.0f * nearPlane * tan(0.5f * fovDegrees * 3.1415f / 180.0f);
+	float nearPlaneWidth = nearPlaneHeight * aspectRatio;
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveLH(
-		re.GetWidth(),
-		re.GetHeight(),
+		nearPlaneWidth,
+		nearPlaneHeight,
 		nearPlane,
 		farPlane
 	);

@@ -1,6 +1,6 @@
 /*
 Author: Nathan Dunn
-Module: G3D
+Module: UTL
 
 Multipurpose utilitarian data structures.
 
@@ -18,9 +18,9 @@ namespace UTL
 		float x = 0;
 		float y = 0;
 		float z = 0;
-		float roll = 0;
-		float pitch = 0;
-		float yaw = 0;
+		float roll = 0; // rotation around x axis
+		float pitch = 0; // rotation around y axis
+		float yaw = 0; // rotation around z axis
 		float xScale = 1;
 		float yScale = 1;
 		float zScale = 1;

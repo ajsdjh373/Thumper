@@ -42,6 +42,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
 	DirectX::XMMATRIX Transform;
-	bool constantsNeedMapped;
 
 };
