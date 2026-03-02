@@ -157,12 +157,9 @@
   <ItemGroup>
     <ClCompile Include="ERR_ErrorEngine.cpp" />
     <ClCompile Include="G3D_Camera.cpp" />
-    <ClCompile Include="G3D_Obj_Tile.cpp" />
     <ClCompile Include="G3D_Obj_WireFrame.cpp" />
     <ClCompile Include="G3D_RenderEngine.cpp" />
-    <ClCompile Include="G3D_Shader_Texture.cpp" />
     <ClCompile Include="G3D_Shader_WireFrame.cpp" />
-    <ClCompile Include="G3D_Texture2D.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="WIN_Keyboard.cpp" />
     <ClCompile Include="WIN_Mouse.cpp" />
@@ -172,13 +169,9 @@
     <ClInclude Include="ERR_ErrorEngine.h" />
     <ClInclude Include="G3D_Camera.h" />
     <ClInclude Include="G3D_Include.h" />
-    <ClInclude Include="G3D_Obj_Tile.h" />
     <ClInclude Include="G3D_Obj_WireFrame.h" />
     <ClInclude Include="G3D_RenderEngine.h" />
-    <ClInclude Include="G3D_Shader_Texture.h" />
     <ClInclude Include="G3D_Shader_WireFrame.h" />
-    <ClInclude Include="G3D_Texture2D.h" />
-    <ClInclude Include="G3D_Utilities.h" />
     <ClInclude Include="Standards.h" />
     <ClInclude Include="ToDo.h" />
     <ClInclude Include="UTL_Utilities.h" />

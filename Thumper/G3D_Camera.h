@@ -12,7 +12,6 @@ Known bugs and limitations:
 #include <DirectXMath.h>
 #include <vector>
 //#include "Window.h"
-#include "G3D_Utilities.h"
 
 namespace G3D
 {

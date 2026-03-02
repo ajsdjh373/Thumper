@@ -69,19 +69,10 @@
     <ClCompile Include="WIN_Mouse.cpp">
       <Filter>WIN\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="G3D_Shader_Texture.cpp">
-      <Filter>G3D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="G3D_Camera.cpp">
       <Filter>G3D\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="G3D_Obj_Tile.cpp">
-      <Filter>G3D\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="G3D_RenderEngine.cpp">
-      <Filter>G3D\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="G3D_Texture2D.cpp">
       <Filter>G3D\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ERR_ErrorEngine.cpp">
@@ -113,22 +104,10 @@
     <ClInclude Include="WIN_Mouse.h">
       <Filter>WIN\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="G3D_Shader_Texture.h">
-      <Filter>G3D\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="G3D_Camera.h">
       <Filter>G3D\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="G3D_Obj_Tile.h">
-      <Filter>G3D\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="G3D_RenderEngine.h">
-      <Filter>G3D\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="G3D_Texture2D.h">
-      <Filter>G3D\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="G3D_Utilities.h">
       <Filter>G3D\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="G3D_Include.h">

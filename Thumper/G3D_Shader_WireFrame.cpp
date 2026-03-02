@@ -25,7 +25,7 @@ Safeties and known issues:
 G3D::Shader_WireFrame::Shader_WireFrame(G3D::RenderEngine& re)
 {
 		// vertex shader
-	ERR::errorTracker.TestHR(D3DReadFileToBlob(L"C:\\Storage\\Code\\Thumper\\x64\\Debug\\WireFrameVS.cso", &pBlob), __FILE__, __func__, __LINE__);
+	ERR::errorTracker.TestHR(D3DReadFileToBlob(L"WireFrameVS.cso", &pBlob), __FILE__, __func__, __LINE__);
 	// I am leaving out a potentially useful shader feature in the next call https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/storing-variables-and-types-for-shaders-to-share
 	ERR::errorTracker.TestHR(re.GetDevice()->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &pVertexShader), __FILE__, __func__, __LINE__);
 

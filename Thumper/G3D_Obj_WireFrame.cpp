@@ -22,7 +22,7 @@ Safeties and known issues:
 - Not doing anything with bad HRESULTS
 
 */
-G3D::Obj_WireFrame::Obj_WireFrame(std::vector<G3D::Vertex_P>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re)
+G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re)
 {
 	// copy input data into a local cache
 	verticesCache = vertices;
@@ -30,12 +30,12 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<G3D::Vertex_P>& vertices, std::vec
 
 	// vertex buffer
 	D3D11_BUFFER_DESC VBD = {};
-	VBD.ByteWidth = sizeof(G3D::Vertex_P) * verticesCache.size();
+	VBD.ByteWidth = sizeof(UTL::point) * verticesCache.size();
 	VBD.Usage = D3D11_USAGE_DYNAMIC;
 	VBD.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	VBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	VBD.MiscFlags = 0u;
-	VBD.StructureByteStride = sizeof(G3D::Vertex_P);
+	VBD.StructureByteStride = sizeof(UTL::point);
 
 	D3D11_SUBRESOURCE_DATA VSD = {};
 	VSD.pSysMem = &verticesCache[0];
@@ -109,16 +109,11 @@ ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
 		memcpy(MSR.pData, &Transform, sizeof(DirectX::XMMATRIX));
 		re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
 
-		// remapping the vertex buffer
-		//re.GetImmediateContext()->Map(pVertexBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &MSR);
-		//memcpy(MSR.pData, &verticesCache[0], sizeof(G3D::Vertex_PT) * verticesCache.size());
-		//re.GetImmediateContext()->Unmap(pVertexBuffer.Get(), 0u);
-
 		constantsNeedMapped = false;
 	}
 
 	// vertex buffer
-	const unsigned int VertexSize = sizeof(G3D::Vertex_P);
+	const unsigned int VertexSize = sizeof(UTL::point);
 	const UINT offset = 0u;
 	re.GetImmediateContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &VertexSize, &offset);
 

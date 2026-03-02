@@ -25,4 +25,11 @@ namespace UTL
 		float yScale = 1;
 		float zScale = 1;
 	};
+
+	struct point
+	{
+		float x = 0;
+		float y = 0;
+		float z = 0;
+	};
 }

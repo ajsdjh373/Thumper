@@ -26,7 +26,7 @@ class G3D::Obj_WireFrame
 {
 public:
 	Obj_WireFrame() = delete;
-	Obj_WireFrame(std::vector<G3D::Vertex_P>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re);
+	Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re);
 	//~Obj_WireFrame();
 	ERR::ErrorCodes Draw(G3D::RenderEngine& re);
 	void UpdateAttitude(UTL::attitude& newAttitude);
@@ -36,7 +36,7 @@ private:
 public:
 
 private:
-	std::vector<G3D::Vertex_P> verticesCache;
+	std::vector<UTL::point> verticesCache;
 	std::vector<unsigned short> indicesCache;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;

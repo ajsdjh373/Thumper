@@ -29,7 +29,7 @@ int CALLBACK WinMain(
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
 		// add a wire frame object
-		std::vector<G3D::Vertex_P> vertixXYZ =
+		std::vector<UTL::point> vertixXYZ =
 		{
 			{0.0f, 0.0f, 0.0f},
 			{0.5f, 0.0f, 0.0f},
