@@ -43,7 +43,7 @@ int CALLBACK WinMain(
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
 		// camera
-		UTL::attitude cameraAttitude{ -2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1 };
+		UTL::attitude cameraAttitude{ 0.0f, 0.0f, -5.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1 };
 
 		// main loop
 		while (true)

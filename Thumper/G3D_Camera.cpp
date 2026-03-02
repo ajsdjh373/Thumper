@@ -84,45 +84,29 @@ Safeties and known issues:
 */
 DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
 {
-	// build orientation quaternion from attitude euler angles
-	DirectX::XMVECTOR orientationQuat = DirectX::XMQuaternionRotationRollPitchYaw(
-		-attitude.roll,
-		-attitude.pitch,
-		-attitude.yaw
-	);
 	/*
-	// derive forward and up vectors from the quaternion
-	DirectX::XMVECTOR forward = DirectX::XMVector3Rotate(
-		DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f),
-		orientationQuat
-	);
-	DirectX::XMVECTOR up = DirectX::XMVector3Rotate(
-		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
-		orientationQuat
-	);
-
-	// build view matrix from position and orientation
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(
-		attitude.x,
-		attitude.y,
-		attitude.z,
-		0.0f
-	);
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(position, forward, up);
+	NOTE: operating in RHR
 	*/
-	// build rotation matrix from quaternion, then invert it for the view
-	// the view matrix is the inverse of the camera's world transform
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(orientationQuat);
+	DirectX::XMVECTOR orientationQuat =
+		DirectX::XMQuaternionRotationRollPitchYaw(
+			attitude.roll,
+			attitude.pitch,
+			attitude.yaw
+		);
 
-	// translation matrix for camera position
+	// inverse rotation
+	DirectX::XMVECTOR invQuat = DirectX::XMQuaternionInverse(orientationQuat);
+
+	DirectX::XMMATRIX rotationMatrix =
+		DirectX::XMMatrixRotationQuaternion(invQuat);
+
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
-		-attitude.x,
-		-attitude.y,
-		-attitude.z
-	);
+			-attitude.x,
+			-attitude.y,
+			-attitude.z
+		);
 
-	// view matrix = translate to origin first, then rotate
-	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix;
+	DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;
 
 	// build projection matrix from camera properties
 	float aspectRatio = (float)widthInPixels / (float)heightInPixels;

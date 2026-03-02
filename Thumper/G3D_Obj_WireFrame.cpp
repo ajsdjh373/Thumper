@@ -100,7 +100,10 @@ Safeties and known issues:
 ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
 
 	// combine model transform with current camera matrix
-	DirectX::XMMATRIX finalTransform = Transform * re.camera.GetMatrix(re.GetWidth(), re.GetHeight());
+	DirectX::XMMATRIX transform1 = Transform * re.camera.GetMatrix(re.GetWidth(), re.GetHeight());
+
+	// transpose to match expected shader layout
+	DirectX::XMMATRIX transform2 = DirectX::XMMatrixTranspose(transform1);
 
 	// mapping the constant buffer
 	D3D11_MAPPED_SUBRESOURCE MSR;
@@ -108,7 +111,7 @@ ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
 	// map the transform buffer
 	// note that map and unmap ask for an Subresource, this is the index if multiple were input in the Set function for that resource
 	ERR::errorTracker.TestHR(re.GetImmediateContext()->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &MSR), __FILE__, __func__, __LINE__);
-	memcpy(MSR.pData, &finalTransform, sizeof(DirectX::XMMATRIX));
+	memcpy(MSR.pData, &transform2, sizeof(DirectX::XMMATRIX));
 	re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
 
 	// vertex buffer
@@ -146,6 +149,9 @@ Safeties and known issues:
 */
 void G3D::Obj_WireFrame::UpdateAttitude(UTL::attitude& attitude)
 {
-	Transform = DirectX::XMMatrixScaling(attitude.xScale, attitude.yScale, attitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(-attitude.roll, -attitude.pitch, -attitude.yaw) * DirectX::XMMatrixTranslation(-attitude.x, -attitude.y, -attitude.z);
-	Transform = DirectX::XMMatrixTranspose(Transform);
+	/*
+	NOTE: operating in RHR
+	*/
+	Transform = DirectX::XMMatrixScaling(attitude.xScale, attitude.yScale, attitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(attitude.roll, attitude.pitch, attitude.yaw)
+		* DirectX::XMMatrixTranslation(attitude.x, attitude.y, attitude.z);
 }
