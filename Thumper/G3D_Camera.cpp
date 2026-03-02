@@ -9,121 +9,117 @@ See associated header file for more information
 #include <math.h>
 
 /*
-Default constructor
+No surprises.
+
+Arguments:
+attitude		9 DoF attitude. Scale represents zoom and aspect ratio distortion
+nearPlane		distance to the near plane
+farPlane		distance to the far plane
+
+Return:
+N/A
+
+Safeties and known issues:
+- N/A
+
 */
-G3D::Camera::Camera() :
-	Focus{ 0, 0, 0 },
-	Radius{ 30 },
-	Elevation{ 70 },
-	Azimuth{ 0 },
-	CacheFocus{ 0, 0, 0 },
-	CacheRadius{ 30 },
-	CacheElevation{ 70 },
-	CacheAzimuth{ 0 }
+G3D::Camera::Camera(UTL::attitude attitude, float nearPlane, float farPlane, float fov) :
+	attitude{ attitude },
+	nearPlane{ nearPlane },
+	farPlane{ farPlane },
+	fov{ fov }
 {}
 
 /*
-Constructor
-*/
-G3D::Camera::Camera(float PointAtX, float PointAtY, float PointAtZ, float Radius, float Elevation, float Azimuth, float FoV, float NearPlane, float FarPlane) :
-	Focus{ PointAtX, PointAtY, PointAtZ },
-	Radius{ Radius },
-	Elevation{ Elevation },
-	Azimuth{ Azimuth },
-	FoV{ FoV },
-	FarPlane{ FarPlane },
-	NearPlane{ NearPlane },
-	CacheFocus{ PointAtX, PointAtY, PointAtZ },
-	CacheRadius{ Radius },
-	CacheElevation{ Elevation },
-	CacheAzimuth{ Azimuth }
-{}
+Immediately updates the camera attitude.
 
-/*
-Caches all current camera orientation information
+Arguments:
+attitude		new attitude
+
+Return:
+N/A
+
+Safeties and known issues:
+- N/A
+
 */
-void G3D::Camera::Cache()
+void G3D::Camera::Update(UTL::attitude attitude)
 {
-	CacheFocus = Focus;
-	CacheRadius = Radius;
-	CacheElevation = Elevation;
-	CacheAzimuth = Azimuth;
+	this->attitude = attitude;
 }
 
 /*
-Reverts the camera orientation information to the last cash
+Immediately updates the camera attitude.
+
+Arguments:
+attitude		new attitude
+
+Return:
+N/A
+
+Safeties and known issues:
+- N/A
+
 */
-void G3D::Camera::Revert()
+void G3D::Camera::Update(UTL::attitude attitude, float nearPlane, float farPlane, float fov)
 {
-	Focus = CacheFocus;
-	Radius = CacheRadius;
-	Elevation = CacheElevation;
-	Azimuth = CacheAzimuth;
+	this->attitude = attitude;
+	this->farPlane = farPlane;
+	this->nearPlane = nearPlane;
+	this->fov = fov;
 }
 
 /*
-Returns the left handed matrix for the camera's orientation.
+Calculate and return the transform matrix associated with the camera.
+
+Arguments:
+N/A
+
+Return:
+Matrix transform for an object due to the camera's position and orientation
+
+Safeties and known issues:
+- N/A
+
 */
-DirectX::XMMATRIX G3D::Camera::GetMatrix() const noexcept
+DirectX::XMMATRIX G3D::Camera::GetMatrix(G3D::RenderEngine& re) const noexcept
 {
-	/*
-	Roll, pitch, and yaw controls have been removed because they
-	are not needed for OSRS style camera control and introduce extra
-	complexity to world space click detection.
-
-	Elevation and Azimuth are implemented correctly, despite appearances!
-	Elevation is from the camera's frame of reference, so + elevation is looking up, 0 elevation is a horizontal camera
-	Azimuth is rotating around +z with a + azimuth moving from +x to +y
-	*/
-	float NearPlaneSize;
-
-	NearPlaneSize = 2.0f * NearPlane * tan(0.5f * FoV * 3.1415f / 180.0f);
-
-	/*
-	const auto CameraPosition = DirectX::XMVector3Transform(
-		DirectX::XMVectorSet(Focus.X, Focus.Y, Radius + Focus.Z, 0.0f),
-		DirectX::XMMatrixRotationRollPitchYaw(0.0f, -(Elevation + 90) * 3.1415f / 180.0f, 0.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, -Azimuth * 3.1415f / 180.0f)
+	// build orientation quaternion from attitude euler angles
+	DirectX::XMVECTOR orientationQuat = DirectX::XMQuaternionRotationRollPitchYaw(
+		attitude.pitch,
+		attitude.yaw,
+		attitude.roll
 	);
 
-	return DirectX::XMMatrixLookAtLH(
-		CameraPosition,
-		DirectX::XMVectorSet(Focus.X, Focus.Y, Focus.Z, 0.0f),
-		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f)) *
-		DirectX::XMMatrixScaling(360.0f / 640.0f, 1.0f, 1.0f) *
-		DirectX::XMMatrixPerspectiveLH(NearPlaneSize, NearPlaneSize, NearPlane, FarPlane);
-	*/
-
-	//const auto CameraPosition = DirectX::XMVectorAdd(
-	//	DirectX::XMVector3Transform(
-	//		DirectX::XMVectorSet(0, 0, Radius + Focus.Z, 0.0f),
-	//		DirectX::XMMatrixRotationRollPitchYaw(0.0f, Elevation * 3.1415f / 180.0f, 0.0f) *
-	//		DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, Azimuth * 3.1415f / 180.0f)
-	//	), 
-	//	DirectX::XMVectorSet(Focus.X, Focus.Y, 0.0f, 0.0f)
-	//);
-	//
-	//return DirectX::XMMatrixLookAtLH(
-	//	CameraPosition,
-	//	DirectX::XMVectorSet(Focus.X, Focus.Y, Focus.Z, 0.0f),
-	//	DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f)) *
-	//	DirectX::XMMatrixScaling(360.0f / 640.0f, 1.0f, 1.0f) *
-	//	DirectX::XMMatrixPerspectiveLH(NearPlaneSize, NearPlaneSize, NearPlane, FarPlane);
-
-	const auto CameraPosition = DirectX::XMVectorAdd(
-		DirectX::XMVector3Transform(
-			DirectX::XMVectorSet(0, 0, Radius, 0.0f),
-			DirectX::XMMatrixRotationRollPitchYaw(0.0f, Elevation * 3.1415f / 180.0f, 0.0f) *
-			DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, Azimuth * 3.1415f / 180.0f)
-		),
-		DirectX::XMVectorSet(Focus.X, Focus.Y, Focus.Z, 0.0f)
+	// derive forward and up vectors from the quaternion
+	DirectX::XMVECTOR forward = DirectX::XMVector3Rotate(
+		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f),
+		orientationQuat
+	);
+	DirectX::XMVECTOR up = DirectX::XMVector3Rotate(
+		DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),
+		orientationQuat
 	);
 
-	return DirectX::XMMatrixLookAtLH(
-		CameraPosition,
-		DirectX::XMVectorSet(Focus.X, Focus.Y, Focus.Z, 0.0f),
-		DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f)) *
-		DirectX::XMMatrixScaling(360.0f / 640.0f, 1.0f, 1.0f) *
-		DirectX::XMMatrixPerspectiveLH(NearPlaneSize, NearPlaneSize, NearPlane, FarPlane);
+	// build view matrix from position and orientation
+	DirectX::XMVECTOR position = DirectX::XMVectorSet(
+		attitude.x,
+		attitude.y,
+		attitude.z,
+		0.0f
+	);
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookToLH(position, forward, up);
+
+	// build projection matrix from camera properties
+	float nearPlaneSize = 2.0f * nearPlane * tan(0.5f * fov * 3.1415f / 180.0f);
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveLH(
+		re.GetWidth(),
+		re.GetHeight(),
+		nearPlane,
+		farPlane
+	);
+
+	return viewMatrix * projectionMatrix;
 }
 
 /*

@@ -12,10 +12,10 @@ Known bugs and limitations:
 
 #pragma once
 #include <vector>
+#include <DirectXMath.h>
 #include "G3D_RenderEngine.h"
 #include "ERR_ErrorEngine.h"
 #include "UTL_Utilities.h"
-
 
 namespace G3D
 {

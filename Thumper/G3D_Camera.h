@@ -11,6 +11,8 @@ Known bugs and limitations:
 #pragma once
 #include <DirectXMath.h>
 #include <vector>
+#include "UTL_Utilities.h"
+#include "G3D_RenderEngine.h"
 //#include "Window.h"
 
 namespace G3D
@@ -22,33 +24,24 @@ class G3D::Camera
 {
 public:
 	// public member functions
-	Camera();
-	Camera(float PointAtX, float PointAtY, float PointAtZ, float Radius, float Elevation, float Azimuth, float FoV, float NearPlane, float FarPlane);
-	void Cache();
-	void Revert();
-	DirectX::XMMATRIX GetMatrix() const noexcept;
+	Camera() = delete;
+	Camera(UTL::attitude attitude, float nearPlane, float farPlane, float fov);
+	void Update(UTL::attitude attitude);
+	void Update(UTL::attitude attitude, float nearPlane, float farPlane, float fov);
+	DirectX::XMMATRIX GetMatrix(G3D::RenderEngine& re) const noexcept;
 	//bool CastRay(int X, int Y, Window& Wnd, std::vector<float>& Point, std::vector<float>& Vector);
+
+private:
+	// private member functions
 
 public:
 	// public member variables
-	struct Point
-	{
-		float X;
-		float Y;
-		float Z;
-	};
-	Point Focus;
-	float Radius;
-	float Elevation;
-	float Azimuth;
-	float FoV;
-	float NearPlane;
-	float FarPlane;
+	UTL::attitude attitude;
+	float nearPlane;
+	float farPlane;
+	float fov;
 
 private:
 	// private member variables
-	Point CacheFocus;
-	float CacheRadius;
-	float CacheElevation;
-	float CacheAzimuth;
+	
 };
