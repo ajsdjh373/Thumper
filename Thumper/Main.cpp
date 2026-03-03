@@ -112,6 +112,30 @@ int CALLBACK WinMain(
 			{
 				cameraAttitude.z -= 0.01;
 			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
+			{
+				cameraAttitude.pitch -= 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::S)->Down)
+			{
+				cameraAttitude.pitch += 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::A)->Down)
+			{
+				cameraAttitude.roll -= 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::D)->Down)
+			{
+				cameraAttitude.roll += 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::R)->Down)
+			{
+				cameraAttitude.yaw -= 0.01;
+			}
+			if (mainWin.kbd.CheckASCII(KBDASCII::F)->Down)
+			{
+				cameraAttitude.yaw += 0.01;
+			}
 			
 			// G3D testing
 			renderEngine.camera.Update(cameraAttitude);

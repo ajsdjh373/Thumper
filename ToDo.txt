@@ -1,8 +1,9 @@
 
 current
-- verify/fix all coordinate systems and transforms
-	- check RPY is propper RHR for camera rotation
-	- check both xyz and rpy for object transform
+- implement proper body and global transforms in UTL
+	- camera shouldn't be coded to point at a point in space, instead pointing in a direction
+	- camera movement should be able to be implemented in a "free flying" mode where inputs can be given in the body frame
+- check both xyz and rpy for object transform
 - load a 3D object from a file (download a free one from the internet) (do with new module for asset read/write)
 - get the 3D object drawn on screen
 - implement back culling (triangles facing away from the camera are not drawn)

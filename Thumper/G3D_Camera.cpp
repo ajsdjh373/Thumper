@@ -97,8 +97,7 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 	// inverse rotation
 	DirectX::XMVECTOR invQuat = DirectX::XMQuaternionInverse(orientationQuat);
 
-	DirectX::XMMATRIX rotationMatrix =
-		DirectX::XMMatrixRotationQuaternion(invQuat);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(invQuat);
 
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
 			-attitude.x,
@@ -106,7 +105,8 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 			-attitude.z
 		);
 
-	DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;
+	//DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;
+	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix;
 
 	// build projection matrix from camera properties
 	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
