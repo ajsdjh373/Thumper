@@ -13,11 +13,15 @@ Known bugs and limitations:
 
 namespace UTL
 {
-	struct attitude
+	struct globalFrame
 	{
 		float x = 0; // global frame of reference
 		float y = 0; // global frame of reference
 		float z = 0; // global frame of reference
+	};
+
+	struct bodyFrame
+	{
 		float roll = 0; // rotation around x axis in body frame of reference
 		float pitch = 0; // rotation around y axis in body frame of reference
 		float yaw = 0; // rotation around z axis in body frame of reference

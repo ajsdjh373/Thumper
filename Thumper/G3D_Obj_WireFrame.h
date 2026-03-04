@@ -29,7 +29,7 @@ public:
 	Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re);
 	//~Obj_WireFrame();
 	ERR::ErrorCodes Draw(G3D::RenderEngine& re);
-	void UpdateAttitude(UTL::attitude& newAttitude);
+	void UpdateBodyAndGlobalFrame(UTL::bodyFrame& bodyFrame, UTL::globalFrame& globalFrame);
 
 private:
 

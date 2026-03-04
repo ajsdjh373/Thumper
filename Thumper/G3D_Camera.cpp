@@ -23,8 +23,9 @@ Safeties and known issues:
 - N/A
 
 */
-G3D::Camera::Camera(UTL::attitude attitude, float nearPlane, float farPlane, float fovDegrees) :
-	attitude{ attitude },
+G3D::Camera::Camera(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees) :
+	bodyFrame{ bodyFrame },
+	globalFrame{ globalFrame },
 	nearPlane{ nearPlane },
 	farPlane{ farPlane },
 	fovDegrees{ fovDegrees }
@@ -43,9 +44,10 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::attitude attitude)
+void G3D::Camera::Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame)
 {
-	this->attitude = attitude;
+	this->bodyFrame = bodyFrame;
+	this->globalFrame = globalFrame;
 }
 
 /*
@@ -61,9 +63,10 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::attitude attitude, float nearPlane, float farPlane, float fovDegrees)
+void G3D::Camera::Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees)
 {
-	this->attitude = attitude;
+	this->bodyFrame = bodyFrame;
+	this->globalFrame = globalFrame;
 	this->farPlane = farPlane;
 	this->nearPlane = nearPlane;
 	this->fovDegrees = fovDegrees;
@@ -89,9 +92,9 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 	*/
 	DirectX::XMVECTOR orientationQuat =
 		DirectX::XMQuaternionRotationRollPitchYaw(
-			attitude.roll,
-			attitude.pitch,
-			attitude.yaw
+			bodyFrame.roll,
+			bodyFrame.pitch,
+			bodyFrame.yaw
 		);
 
 	// inverse rotation
@@ -100,9 +103,9 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(invQuat);
 
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
-			-attitude.x,
-			-attitude.y,
-			-attitude.z
+			-globalFrame.x,
+			-globalFrame.y,
+			-globalFrame.z
 		);
 
 	//DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;

@@ -43,7 +43,8 @@ int CALLBACK WinMain(
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
 		// camera
-		UTL::attitude cameraAttitude{ 0.0f, 0.0f, -5.0f, 0.0f, 0.0f, 0.0f, 1, 1, 1 };
+		UTL::globalFrame cameraGlobalFrame{ 0.0f, 0.0f, -5.0f };
+		UTL::bodyFrame cameraBodyFrame{0.0f, 0.0f, 0.0f, 1, 1, 1 };
 
 		// main loop
 		while (true)
@@ -90,55 +91,55 @@ int CALLBACK WinMain(
 			// camera keyboard controls
 			if (mainWin.kbd.CheckASCII(KBDASCII::w)->Down)
 			{
-				cameraAttitude.x += 0.01;
+				cameraGlobalFrame.x += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::s)->Down)
 			{
-				cameraAttitude.x -= 0.01;
+				cameraGlobalFrame.x -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
 			{
-				cameraAttitude.y += 0.01;
+				cameraGlobalFrame.y += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
 			{
-				cameraAttitude.y -= 0.01;
+				cameraGlobalFrame.y -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
 			{
-				cameraAttitude.z += 0.01;
+				cameraGlobalFrame.z += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
 			{
-				cameraAttitude.z -= 0.01;
+				cameraGlobalFrame.z -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{
-				cameraAttitude.pitch -= 0.01;
+				cameraBodyFrame.pitch -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::S)->Down)
 			{
-				cameraAttitude.pitch += 0.01;
+				cameraBodyFrame.pitch += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::A)->Down)
 			{
-				cameraAttitude.roll -= 0.01;
+				cameraBodyFrame.roll -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::D)->Down)
 			{
-				cameraAttitude.roll += 0.01;
+				cameraBodyFrame.roll += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::R)->Down)
 			{
-				cameraAttitude.yaw -= 0.01;
+				cameraBodyFrame.yaw -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::F)->Down)
 			{
-				cameraAttitude.yaw += 0.01;
+				cameraBodyFrame.yaw += 0.01;
 			}
 			
 			// G3D testing
-			renderEngine.camera.Update(cameraAttitude);
+			renderEngine.camera.Update(cameraBodyFrame, cameraGlobalFrame);
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();
