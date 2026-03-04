@@ -161,6 +161,7 @@
     <ClCompile Include="G3D_RenderEngine.cpp" />
     <ClCompile Include="G3D_Shader_WireFrame.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="UTL_Utilities.cpp" />
     <ClCompile Include="WIN_Keyboard.cpp" />
     <ClCompile Include="WIN_Mouse.cpp" />
     <ClCompile Include="WIN_Window.cpp" />

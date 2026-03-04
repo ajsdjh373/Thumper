@@ -84,6 +84,9 @@
     <ClCompile Include="G3D_Shader_WireFrame.cpp">
       <Filter>G3D\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UTL_Utilities.cpp">
+      <Filter>UTL\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Standards.h">

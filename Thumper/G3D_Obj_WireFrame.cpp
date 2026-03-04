@@ -22,7 +22,7 @@ Safeties and known issues:
 - Not doing anything with bad HRESULTS
 
 */
-G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re)
+G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::vec3f>& vertices, std::vector<unsigned short>& indices, G3D::RenderEngine& re)
 {
 	// copy input data into a local cache
 	verticesCache = vertices;
@@ -30,12 +30,12 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector
 
 	// vertex buffer
 	D3D11_BUFFER_DESC VBD = {};
-	VBD.ByteWidth = sizeof(UTL::point) * verticesCache.size();
+	VBD.ByteWidth = sizeof(UTL::vec3f) * verticesCache.size();
 	VBD.Usage = D3D11_USAGE_DYNAMIC;
 	VBD.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	VBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	VBD.MiscFlags = 0u;
-	VBD.StructureByteStride = sizeof(UTL::point);
+	VBD.StructureByteStride = sizeof(UTL::vec3f);
 
 	D3D11_SUBRESOURCE_DATA VSD = {};
 	VSD.pSysMem = &verticesCache[0];
@@ -80,7 +80,7 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector
 
 	// transform buffer init to default values
 	UTL::bodyCenteredAttitude tempBodyCenteredAttitude{ 0, 0, 0, 1, 1, 1 };
-	UTL::globalFrame tempGlobalFrame{ 0, 0, 0 };
+	UTL::vec3f tempGlobalFrame{ 0, 0, 0 };
 	UpdateBodyAndGlobalFrame(tempBodyCenteredAttitude, tempGlobalFrame);
 
 }
@@ -116,7 +116,7 @@ ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
 	re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
 
 	// vertex buffer
-	const unsigned int VertexSize = sizeof(UTL::point);
+	const unsigned int VertexSize = sizeof(UTL::vec3f);
 	const UINT offset = 0u;
 	re.GetImmediateContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &VertexSize, &offset);
 
@@ -148,7 +148,7 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Obj_WireFrame::UpdateBodyAndGlobalFrame(UTL::bodyCenteredAttitude& bodyCenteredAttitude, UTL::globalFrame& globalFrame)
+void G3D::Obj_WireFrame::UpdateBodyAndGlobalFrame(UTL::bodyCenteredAttitude& bodyCenteredAttitude, UTL::vec3f& globalFrame)
 {
 	/*
 	NOTE: operating in RHR

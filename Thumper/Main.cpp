@@ -26,14 +26,19 @@ int CALLBACK WinMain(
 		std::string allReceivedKeys = "";
 		mainWin.SetTitle(L"test 2");
 
+		// matrix math testing
+		UTL::matrix3x3f m1{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		UTL::matrix3x3f m2{ 10, 20, 30, 40, 50, 60, 70, 80, 90 };
+		UTL::matrix3x3f m3 = UTL::Multiply(m1, m2);
+
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
 		// add a wire frame object
-		std::vector<UTL::point> vertixXYZ =
+		std::vector<UTL::vec3f> vertixXYZ =
 		{
 			{0.0f, 0.0f, 0.0f},
-			{0.5f, 0.0f, 0.0f},
-			{0.5f, 0.5f, 0.0f}
+			{0.0f, 0.5f, 0.0f},
+			{0.0f, 0.5f, 0.5f}
 		};
 		std::vector<unsigned short> indexData =
 		{
@@ -43,7 +48,7 @@ int CALLBACK WinMain(
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
 		// camera
-		UTL::globalFrame cameraGlobalFrame{ 0.0f, 0.0f, -5.0f };
+		UTL::vec3f cameraGlobalFrame{ -5.0f, 0.0f, 0.0f };
 		UTL::bodyCenteredAttitude camerabodyCenteredAttitude{0.0f, 0.0f, 0.0f, 1, 1, 1 };
 
 		// main loop

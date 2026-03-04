@@ -23,7 +23,7 @@ Safeties and known issues:
 - N/A
 
 */
-G3D::Camera::Camera(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees) :
+G3D::Camera::Camera(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame, float nearPlane, float farPlane, float fovDegrees) :
 	bodyCenteredAttitude{ bodyCenteredAttitude },
 	globalFrame{ globalFrame },
 	nearPlane{ nearPlane },
@@ -44,7 +44,7 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame)
+void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame)
 {
 	this->bodyCenteredAttitude = bodyCenteredAttitude;
 	this->globalFrame = globalFrame;
@@ -63,7 +63,7 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees)
+void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame, float nearPlane, float farPlane, float fovDegrees)
 {
 	this->bodyCenteredAttitude = bodyCenteredAttitude;
 	this->globalFrame = globalFrame;
@@ -102,6 +102,8 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(invQuat);
 
+	DirectX::XMMATRIX pointDownPlusX = DirectX::XMMatrixRotationY(-DirectX::XM_PIDIV2);
+
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
 			-globalFrame.x,
 			-globalFrame.y,
@@ -109,11 +111,11 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 		);
 
 	//DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;
-	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix;
+	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix * pointDownPlusX;
 
 	// build projection matrix from camera properties
 	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
-	float nearPlaneHeight = 2.0f * nearPlane * tan(0.5f * fovDegrees * 3.1415f / 180.0f);
+	float nearPlaneHeight = 2.0f * nearPlane * tan(0.5f * fovDegrees * UTL::pi / 180.0f);
 	float nearPlaneWidth = nearPlaneHeight * aspectRatio;
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveLH(
 		nearPlaneWidth,
@@ -129,7 +131,7 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 Function for generating a vector and a point that represents a line passing
 through the camera and a point in screen space
 
-Accepts the X and Y screen space coordinates and the point and vector to be
+Accepts the X and Y screen space coordinates and the and vector to be
 modified with the return values
 
 Returns true when the inputs aren't in the correct format, returns false
