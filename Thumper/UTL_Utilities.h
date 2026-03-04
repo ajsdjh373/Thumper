@@ -20,9 +20,9 @@ namespace UTL
 		float z = 0; // global frame of reference
 	};
 
-	struct bodyFrame
+	struct bodyCenteredAttitude
 	{
-		float roll = 0; // rotation around x axis in body frame of reference
+		float roll = 0; // rotation around x axis in body frame of reference, 0 aligns with global
 		float pitch = 0; // rotation around y axis in body frame of reference
 		float yaw = 0; // rotation around z axis in body frame of reference
 		float xScale = 1; // scale in body frame of reference

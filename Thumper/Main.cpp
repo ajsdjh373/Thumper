@@ -44,7 +44,7 @@ int CALLBACK WinMain(
 
 		// camera
 		UTL::globalFrame cameraGlobalFrame{ 0.0f, 0.0f, -5.0f };
-		UTL::bodyFrame cameraBodyFrame{0.0f, 0.0f, 0.0f, 1, 1, 1 };
+		UTL::bodyCenteredAttitude camerabodyCenteredAttitude{0.0f, 0.0f, 0.0f, 1, 1, 1 };
 
 		// main loop
 		while (true)
@@ -115,31 +115,31 @@ int CALLBACK WinMain(
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{
-				cameraBodyFrame.pitch -= 0.01;
+				camerabodyCenteredAttitude.pitch -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::S)->Down)
 			{
-				cameraBodyFrame.pitch += 0.01;
+				camerabodyCenteredAttitude.pitch += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::A)->Down)
 			{
-				cameraBodyFrame.roll -= 0.01;
+				camerabodyCenteredAttitude.roll -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::D)->Down)
 			{
-				cameraBodyFrame.roll += 0.01;
+				camerabodyCenteredAttitude.roll += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::R)->Down)
 			{
-				cameraBodyFrame.yaw -= 0.01;
+				camerabodyCenteredAttitude.yaw -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::F)->Down)
 			{
-				cameraBodyFrame.yaw += 0.01;
+				camerabodyCenteredAttitude.yaw += 0.01;
 			}
 			
 			// G3D testing
-			renderEngine.camera.Update(cameraBodyFrame, cameraGlobalFrame);
+			renderEngine.camera.Update(camerabodyCenteredAttitude, cameraGlobalFrame);
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();

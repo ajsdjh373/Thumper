@@ -24,9 +24,9 @@ class G3D::Camera
 public:
 	// public member functions
 	Camera() = delete;
-	Camera(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees);
-	void Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame);
-	void Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees);
+	Camera(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees);
+	void Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame);
+	void Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees);
 	DirectX::XMMATRIX GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept;
 	//bool CastRay(int X, int Y, Window& Wnd, std::vector<float>& Point, std::vector<float>& Vector);
 
@@ -35,7 +35,7 @@ private:
 
 public:
 	// public member variables
-	UTL::bodyFrame bodyFrame;
+	UTL::bodyCenteredAttitude bodyCenteredAttitude;
 	UTL::globalFrame globalFrame;
 	float nearPlane;
 	float farPlane;

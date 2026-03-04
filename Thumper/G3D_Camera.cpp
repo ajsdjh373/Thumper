@@ -23,8 +23,8 @@ Safeties and known issues:
 - N/A
 
 */
-G3D::Camera::Camera(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees) :
-	bodyFrame{ bodyFrame },
+G3D::Camera::Camera(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees) :
+	bodyCenteredAttitude{ bodyCenteredAttitude },
 	globalFrame{ globalFrame },
 	nearPlane{ nearPlane },
 	farPlane{ farPlane },
@@ -44,9 +44,9 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame)
+void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame)
 {
-	this->bodyFrame = bodyFrame;
+	this->bodyCenteredAttitude = bodyCenteredAttitude;
 	this->globalFrame = globalFrame;
 }
 
@@ -63,9 +63,9 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyFrame bodyFrame, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees)
+void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::globalFrame globalFrame, float nearPlane, float farPlane, float fovDegrees)
 {
-	this->bodyFrame = bodyFrame;
+	this->bodyCenteredAttitude = bodyCenteredAttitude;
 	this->globalFrame = globalFrame;
 	this->farPlane = farPlane;
 	this->nearPlane = nearPlane;
@@ -92,9 +92,9 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 	*/
 	DirectX::XMVECTOR orientationQuat =
 		DirectX::XMQuaternionRotationRollPitchYaw(
-			bodyFrame.roll,
-			bodyFrame.pitch,
-			bodyFrame.yaw
+			bodyCenteredAttitude.roll,
+			bodyCenteredAttitude.pitch,
+			bodyCenteredAttitude.yaw
 		);
 
 	// inverse rotation

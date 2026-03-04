@@ -79,9 +79,9 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::point>& vertices, std::vector
 	ERR::errorTracker.TestHR(re.GetDevice()->CreateBuffer(&CBD, &CSD, &pConstantBuffer), __FILE__, __func__, __LINE__);
 
 	// transform buffer init to default values
-	UTL::bodyFrame tempBodyFrame{ 0, 0, 0, 1, 1, 1 };
+	UTL::bodyCenteredAttitude tempBodyCenteredAttitude{ 0, 0, 0, 1, 1, 1 };
 	UTL::globalFrame tempGlobalFrame{ 0, 0, 0 };
-	UpdateBodyAndGlobalFrame(tempBodyFrame, tempGlobalFrame);
+	UpdateBodyAndGlobalFrame(tempBodyCenteredAttitude, tempGlobalFrame);
 
 }
 
@@ -148,11 +148,11 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Obj_WireFrame::UpdateBodyAndGlobalFrame(UTL::bodyFrame& bodyFrame, UTL::globalFrame& globalFrame)
+void G3D::Obj_WireFrame::UpdateBodyAndGlobalFrame(UTL::bodyCenteredAttitude& bodyCenteredAttitude, UTL::globalFrame& globalFrame)
 {
 	/*
 	NOTE: operating in RHR
 	*/
-	Transform = DirectX::XMMatrixScaling(bodyFrame.xScale, bodyFrame.yScale, bodyFrame.zScale) * DirectX::XMMatrixRotationRollPitchYaw(bodyFrame.roll, bodyFrame.pitch, bodyFrame.yaw)
+	Transform = DirectX::XMMatrixScaling(bodyCenteredAttitude.xScale, bodyCenteredAttitude.yScale, bodyCenteredAttitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(bodyCenteredAttitude.roll, bodyCenteredAttitude.pitch, bodyCenteredAttitude.yaw)
 		* DirectX::XMMatrixTranslation(globalFrame.x, globalFrame.y, globalFrame.z);
 }
