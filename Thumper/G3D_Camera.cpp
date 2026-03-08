@@ -6,7 +6,7 @@ See associated header file for more information
 */
 
 #include "G3D_Camera.h"
-#include <math.h>
+#include <cmath>
 
 /*
 No surprises.
@@ -23,12 +23,12 @@ Safeties and known issues:
 - N/A
 
 */
-G3D::Camera::Camera(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame, float nearPlane, float farPlane, float fovDegrees) :
-	bodyCenteredAttitude{ bodyCenteredAttitude },
-	globalFrame{ globalFrame },
+G3D::Camera::Camera(UTL::vector3f attitude, UTL::vector3f position, float nearPlane, float farPlane, float fov) :
+	attitude{ attitude },
+	position{ position },
 	nearPlane{ nearPlane },
 	farPlane{ farPlane },
-	fovDegrees{ fovDegrees }
+	fov{ fov }
 {}
 
 /*
@@ -44,10 +44,10 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame)
+void G3D::Camera::Update(UTL::vector3f attitude, UTL::vector3f position)
 {
-	this->bodyCenteredAttitude = bodyCenteredAttitude;
-	this->globalFrame = globalFrame;
+	this->attitude = attitude;
+	this->position = position;
 }
 
 /*
@@ -63,13 +63,13 @@ Safeties and known issues:
 - N/A
 
 */
-void G3D::Camera::Update(UTL::bodyCenteredAttitude bodyCenteredAttitude, UTL::vec3f globalFrame, float nearPlane, float farPlane, float fovDegrees)
+void G3D::Camera::Update(UTL::vector3f attitude, UTL::vector3f position, float nearPlane, float farPlane, float fov)
 {
-	this->bodyCenteredAttitude = bodyCenteredAttitude;
-	this->globalFrame = globalFrame;
+	this->attitude = attitude;
+	this->position = position;
 	this->farPlane = farPlane;
 	this->nearPlane = nearPlane;
-	this->fovDegrees = fovDegrees;
+	this->fov = fov;
 }
 
 /*
@@ -85,11 +85,12 @@ Safeties and known issues:
 - N/A
 
 */
-DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
+UTL::matrix4x4f G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
 {
 	/*
 	NOTE: operating in RHR
 	*/
+	/*
 	DirectX::XMVECTOR orientationQuat =
 		DirectX::XMQuaternionRotationRollPitchYaw(
 			bodyCenteredAttitude.roll,
@@ -115,7 +116,7 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 
 	// build projection matrix from camera properties
 	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
-	float nearPlaneHeight = 2.0f * nearPlane * tan(0.5f * fovDegrees * UTL::pi / 180.0f);
+	float nearPlaneHeight = 2.0f * nearPlane * (float)tan(0.5f * fovDegrees * UTL::pi / 180.0f);
 	float nearPlaneWidth = nearPlaneHeight * aspectRatio;
 	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveLH(
 		nearPlaneWidth,
@@ -125,6 +126,32 @@ DirectX::XMMATRIX G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned 
 	);
 
 	return viewMatrix * projectionMatrix;
+	*/
+
+	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+
+	// inverse quaternion, negate XYZ
+	q.r2c1 = -q.r2c1;
+	q.r3c1 = -q.r3c1;
+	q.r4c1 = -q.r4c1;
+
+	UTL::matrix4x4f rotation = UTL::RotationFromQuaternion(q);
+
+	UTL::vector3f invertedPosition = { -position.r1c1, -position.r2c1, -position.r3c1 };
+	UTL::matrix4x4f translation = UTL::TranslationFromVector(invertedPosition);
+	UTL::matrix4x4f transform = UTL::Multiply(translation, rotation);
+	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
+	UTL::matrix4x4f projection =
+	{
+		1 / (aspectRatio * std::tan(fov / 2)), 0, 0, 0,
+		0, 1 / (std::tan(fov / 2)), 0, 0,
+		0, 0, farPlane / (farPlane - nearPlane), -farPlane * nearPlane / (farPlane - nearPlane),
+		0, 0, 1, 0
+	};
+	transform = UTL::Multiply(projection, transform);
+
+	return transform;
+
 }
 
 /*

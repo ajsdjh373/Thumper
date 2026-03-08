@@ -34,7 +34,7 @@ G3D::Shader_WireFrame::Shader_WireFrame(G3D::RenderEngine& re)
 	{
 		{ "Position",	0,	DXGI_FORMAT_R32G32B32_FLOAT,	0,	0,					D3D11_INPUT_PER_VERTEX_DATA,	0 }
 	};
-	ERR::errorTracker.TestHR(re.GetDevice()->CreateInputLayout(&IED[0], IED.size(), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout), __FILE__, __func__, __LINE__);
+	ERR::errorTracker.TestHR(re.GetDevice()->CreateInputLayout(&IED[0], (UINT)IED.size(), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout), __FILE__, __func__, __LINE__);
 
 	pBlob.Reset();
 

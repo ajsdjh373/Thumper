@@ -30,11 +30,22 @@ int CALLBACK WinMain(
 		UTL::matrix3x3f m1{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 		UTL::matrix3x3f m2{ 10, 20, 30, 40, 50, 60, 70, 80, 90 };
 		UTL::matrix3x3f m3 = UTL::Multiply(m1, m2);
+		UTL::vector3f v1{ 10, 20, 30 };
+		UTL::vector3f v2 = UTL::Multiply(m1, v1);
+		UTL::Transpose(m1);
+		UTL::matrix4x4f m4{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+		UTL::matrix4x4f m5{ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160 };
+		UTL::matrix4x4f m6 = UTL::Multiply(m4, m5);
+		UTL::vector4f v3{ 10, 20, 30, 40 };
+		UTL::vector4f v4 = UTL::Multiply(m4, v3);
+		UTL::vector3f testAttitude{ 1, 1, 1};
+		UTL::vector4f q = UTL::QuaternionFromEuler(testAttitude);
+		UTL::matrix4x4f m7 = UTL::RotationFromQuaternion(q);
 
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
 		// add a wire frame object
-		std::vector<UTL::vec3f> vertixXYZ =
+		std::vector<UTL::vector3f> vertixXYZ =
 		{
 			{0.0f, 0.0f, 0.0f},
 			{0.0f, 0.5f, 0.0f},
@@ -45,11 +56,15 @@ int CALLBACK WinMain(
 			0, 1, 2
 		};
 		G3D::Obj_WireFrame wireFrameObject{ vertixXYZ ,indexData, renderEngine };
+		UTL::vector3f objPosition = { 0, 0, 0 };
+		UTL::vector3f objAttitude = { 0, 0, 0 };
+		UTL::vector3f objScale = { 1, 1, 1 };
+		wireFrameObject.UpdateBodyAndGlobalFrame(objAttitude, objPosition, objScale);
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
 		// camera
-		UTL::vec3f cameraGlobalFrame{ -5.0f, 0.0f, 0.0f };
-		UTL::bodyCenteredAttitude camerabodyCenteredAttitude{0.0f, 0.0f, 0.0f, 1, 1, 1 };
+		UTL::vector3f cameraPosition{ 0.0f, 0.0f, 0.0f };
+		UTL::vector3f cameraAttitude{0.0f, 0.0f, 0.0f};
 
 		// main loop
 		while (true)
@@ -96,55 +111,55 @@ int CALLBACK WinMain(
 			// camera keyboard controls
 			if (mainWin.kbd.CheckASCII(KBDASCII::w)->Down)
 			{
-				cameraGlobalFrame.x += 0.01;
+				cameraPosition.r1c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::s)->Down)
 			{
-				cameraGlobalFrame.x -= 0.01;
+				cameraPosition.r1c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
 			{
-				cameraGlobalFrame.y += 0.01;
+				cameraPosition.r2c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
 			{
-				cameraGlobalFrame.y -= 0.01;
+				cameraPosition.r2c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
 			{
-				cameraGlobalFrame.z += 0.01;
+				cameraPosition.r3c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
 			{
-				cameraGlobalFrame.z -= 0.01;
+				cameraPosition.r3c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{
-				camerabodyCenteredAttitude.pitch -= 0.01;
+				cameraAttitude.r2c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::S)->Down)
 			{
-				camerabodyCenteredAttitude.pitch += 0.01;
+				cameraAttitude.r2c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::A)->Down)
 			{
-				camerabodyCenteredAttitude.roll -= 0.01;
+				cameraAttitude.r1c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::D)->Down)
 			{
-				camerabodyCenteredAttitude.roll += 0.01;
+				cameraAttitude.r1c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::R)->Down)
 			{
-				camerabodyCenteredAttitude.yaw -= 0.01;
+				cameraAttitude.r3c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::F)->Down)
 			{
-				camerabodyCenteredAttitude.yaw += 0.01;
+				cameraAttitude.r3c1 += 0.01;
 			}
 			
 			// G3D testing
-			renderEngine.camera.Update(camerabodyCenteredAttitude, cameraGlobalFrame);
+			renderEngine.camera.Update(cameraAttitude, cameraPosition);
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();

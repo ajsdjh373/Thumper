@@ -72,6 +72,7 @@ private:
 };
 
 // before functions
+// function comments should contain a useful description. At most, it might look like the following, but may contain less.
 /*
 Description of the function and its intended use
 

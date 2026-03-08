@@ -1,5 +1,8 @@
 
 current
+- fix transforms
+	- object transform has no method of being updated past init
+	- replace XMMatrix usage
 - implement rendering for a list of points with configrable RGB color and a fixed size marker
 - check both xyz and rpy for object transform
 - load a 3D object from a file (download a free one from the internet) (do with new module for asset read/write)
