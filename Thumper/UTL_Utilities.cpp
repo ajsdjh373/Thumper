@@ -17,6 +17,19 @@ void UTL::ConvertBetweenHandedness(UTL::vector3f& v) noexcept
 }
 
 /*
+v1+v2=v3, v3 returned
+*/
+UTL::vector3f UTL::Add(vector3f& v1, vector3f& v2) noexcept
+{
+	vector3f v3;
+	v3.r1c1 = v1.r1c1 + v2.r1c1;
+	v3.r2c1 = v1.r2c1 + v2.r2c1;
+	v3.r3c1 = v1.r3c1 + v2.r3c1;
+
+	return v3;
+}
+
+/*
 m1 * m2 = m3, m3 returned.
 */
 UTL::matrix3x3f UTL::Multiply(matrix3x3f& m1, matrix3x3f& m2) noexcept
@@ -111,6 +124,13 @@ UTL::vector3f UTL::Multiply(matrix3x3f& m, float scalar) noexcept
 
 	return v2;
 }
+/*
+Returns -v
+*/
+UTL::vector3f UTL::Negate(vector3f& v) noexcept
+{
+	return { -v.r1c1, -v.r2c1, -v.r3c1 };
+}
 
 /*
 Multiplies two quaternions together. q1*q2=q3, q3 returned.
@@ -131,26 +151,18 @@ Rotates yaw, then pitch, then roll around the reference axis.
 */
 UTL::vector4f UTL::QuaternionFromEuler(const vector3f& attitude) noexcept
 {
-	vector4f qz; // yaw rotates around z
-	qz.r1c1 = std::cos(attitude.r3c1 / 2);
-	qz.r2c1 = 0;
-	qz.r3c1 = 0;
-	qz.r4c1 = std::sin(attitude.r3c1 / 2);
+	float croll = cos(attitude.r1c1 / 2.0f);
+	float sroll = sin(attitude.r1c1 / 2.0f);
+	float cpitch = cos(attitude.r2c1 / 2.0f);
+	float spitch = sin(attitude.r2c1 / 2.0f);
+	float cyaw = cos(attitude.r3c1 / 2.0f);
+	float syaw = sin(attitude.r3c1 / 2.0f);
 
-	vector4f qy; // pitch rotates around y
-	qy.r1c1 = std::cos(attitude.r2c1 / 2);
-	qy.r2c1 = 0;
-	qy.r3c1 = std::sin(attitude.r2c1 / 2);
-	qy.r4c1 = 0;
-
-	vector4f qx; // roll rotates around x
-	qx.r1c1 = std::cos(attitude.r1c1 / 2);
-	qx.r2c1 = std::sin(attitude.r1c1 / 2);
-	qx.r3c1 = 0;
-	qx.r4c1 = 0;
-
-	vector4f q = QuaternionMultiply(qx, qy);
-	q = QuaternionMultiply(q, qz);
+	vector4f q; // WXYZ
+	q.r1c1 = croll * cpitch * cyaw + sroll * spitch * syaw;
+	q.r2c1 = sroll * cpitch * cyaw - croll * spitch * syaw;
+	q.r3c1 = croll * spitch * cyaw + sroll * cpitch * syaw;
+	q.r4c1 = croll * cpitch * syaw - sroll * spitch * cyaw;
 
 	return q;
 }
@@ -158,33 +170,18 @@ UTL::vector4f UTL::QuaternionFromEuler(const vector3f& attitude) noexcept
 /*
 Returns a rotation matrix. This only converts a quaternion to a 4x4 matrix. It does not apply a rotation.
 */
-UTL::matrix4x4f UTL::RotationFromQuaternion(vector4f& q) noexcept
+UTL::matrix3x3f UTL::RotationFromQuaternion(vector4f& q) noexcept
 {
-	// normalize first to protect against drift
-	float mag = std::sqrt(q.r1c1 * q.r1c1 + q.r2c1 * q.r2c1 + q.r3c1 * q.r3c1 + q.r4c1 * q.r4c1);
-	vector4f normalizedq = q;
-	normalizedq.r1c1 /= mag;
-	normalizedq.r2c1 /= mag;
-	normalizedq.r3c1 /= mag;
-	normalizedq.r4c1 /= mag;
-
-	matrix4x4f m;
-	m.r1c1 = 1 - 2 * (normalizedq.r3c1 * normalizedq.r3c1 + normalizedq.r4c1 * normalizedq.r4c1);
-	m.r1c2 = 2 * (normalizedq.r2c1 * normalizedq.r3c1 - normalizedq.r1c1 * normalizedq.r4c1);
-	m.r1c3 = 2 * (normalizedq.r2c1 * normalizedq.r4c1 + normalizedq.r1c1 * normalizedq.r3c1);
-	m.r1c4 = 0;
-	m.r2c1 = 2 * (normalizedq.r2c1 * normalizedq.r3c1 + normalizedq.r1c1 * normalizedq.r4c1);
-	m.r2c2 = 1 - 2 * (normalizedq.r2c1 * normalizedq.r2c1 + normalizedq.r4c1 * normalizedq.r4c1);
-	m.r2c3 = 2 * (normalizedq.r3c1 * normalizedq.r4c1 - normalizedq.r1c1 * normalizedq.r2c1);
-	m.r2c4 = 0;
-	m.r3c1 = 2 * (normalizedq.r2c1 * normalizedq.r4c1 - normalizedq.r1c1 * normalizedq.r3c1);
-	m.r3c2 = 2 * (normalizedq.r3c1 * normalizedq.r4c1 + normalizedq.r1c1 * normalizedq.r2c1);
-	m.r3c3 = 1 - 2 * (normalizedq.r2c1 * normalizedq.r2c1 + normalizedq.r3c1 * normalizedq.r3c1);
-	m.r3c4 = 0;
-	m.r4c1 = 0;
-	m.r4c2 = 0;
-	m.r4c3 = 0;
-	m.r4c4 = 1;
+	matrix3x3f m;
+	m.r1c1 = 1 - 2 * (q.r3c1 * q.r3c1 + q.r4c1 * q.r4c1);
+	m.r1c2 = 2 * (q.r2c1 * q.r3c1 - q.r1c1 * q.r4c1);
+	m.r1c3 = 2 * (q.r2c1 * q.r4c1 + q.r1c1 * q.r3c1);
+	m.r2c1 = 2 * (q.r2c1 * q.r3c1 + q.r1c1 * q.r4c1);
+	m.r2c2 = 1 - 2 * (q.r2c1 * q.r2c1 + q.r4c1 * q.r4c1);
+	m.r2c3 = 2 * (q.r3c1 * q.r4c1 - q.r1c1 * q.r2c1);
+	m.r3c1 = 2 * (q.r2c1 * q.r4c1 - q.r1c1 * q.r3c1);
+	m.r3c2 = 2 * (q.r3c1 * q.r4c1 + q.r1c1 * q.r2c1);
+	m.r3c3 = 1 - 2 * (q.r2c1 * q.r2c1 + q.r3c1 * q.r3c1);
 
 	return m;
 }

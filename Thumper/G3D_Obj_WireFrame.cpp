@@ -64,7 +64,7 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::vector3f>& vertices, std::vec
 
 	// constant buffers
 	D3D11_BUFFER_DESC CBD = {};
-	CBD.ByteWidth = sizeof(DirectX::XMMATRIX);
+	CBD.ByteWidth = sizeof(G3D::shaderConstantBuffer);
 	CBD.Usage = D3D11_USAGE_DYNAMIC;
 	CBD.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	CBD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -72,7 +72,7 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::vector3f>& vertices, std::vec
 	CBD.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA CSD = {};
-	CSD.pSysMem = &transform_directx;
+	CSD.pSysMem = &shaderConstantBuffer;
 	CSD.SysMemPitch = 0; // unused
 	CSD.SysMemSlicePitch = 0; // unused
 
@@ -81,7 +81,7 @@ G3D::Obj_WireFrame::Obj_WireFrame(std::vector<UTL::vector3f>& vertices, std::vec
 	// transform buffer init to default values
 	UTL::vector3f tempAttitude{ 0, 0, 0};
 	UTL::vector3f tempPosition{ 0, 0, 0 };
-	UTL::vector3f tempScale{ 0, 0, 0 };
+	UTL::vector3f tempScale{ 1, 1, 1 };
 	UpdateBodyAndGlobalFrame(tempAttitude, tempPosition, tempScale);
 
 }
@@ -99,54 +99,53 @@ Safeties and known issues:
 - Not doing anything with bad HRESULTS
 
 */
-ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) {
+ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re) 
+{
+	// constant buffer
+	shaderConstantBuffer.scale = scale;
+	UTL::vector3f v;
+	v = UTL::Negate(re.camera.position);
+	shaderConstantBuffer.translation = UTL::Add(position, v);
+	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+	UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q);
+	shaderConstantBuffer.rotation[0] = rotationMatrix.r1c1;
+	shaderConstantBuffer.rotation[1] = rotationMatrix.r1c2;
+	shaderConstantBuffer.rotation[2] = rotationMatrix.r1c3;
+	shaderConstantBuffer.rotation[3] = 0;
+	shaderConstantBuffer.rotation[4] = rotationMatrix.r2c1;
+	shaderConstantBuffer.rotation[5] = rotationMatrix.r2c2;
+	shaderConstantBuffer.rotation[6] = rotationMatrix.r2c3;
+	shaderConstantBuffer.rotation[7] = 0;
+	shaderConstantBuffer.rotation[8] = rotationMatrix.r3c1;
+	shaderConstantBuffer.rotation[9] = rotationMatrix.r3c2;
+	shaderConstantBuffer.rotation[10] = rotationMatrix.r3c3;
+	shaderConstantBuffer.rotation[11] = 0;
+	shaderConstantBuffer.ar = re.GetWidth() / re.GetHeight();
+	shaderConstantBuffer.ft = tan(re.camera.fov / 2);
+	shaderConstantBuffer.a = re.camera.farPlane / (re.camera.farPlane - re.camera.nearPlane);
+	shaderConstantBuffer.b = re.camera.farPlane * re.camera.nearPlane / (re.camera.farPlane - re.camera.nearPlane);
 
-	if (flag9DOFChanged)
-	{
-		UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
-		UTL::matrix4x4f rotation = UTL::RotationFromQuaternion(q);
-		UTL::matrix4x4f translation = UTL::TranslationFromVector(position);
-		UTL::matrix4x4f scaleMatrix = UTL::ScaleFromVector(scale);
-		//transform = UTL::Multiply(translation, rotation);
-		//transform = UTL::Multiply(transform, scaleMatrix);
-		transform_model = Multiply(rotation, scaleMatrix);
-		transform_model = Multiply(translation, transform_model);
-		flag9DOFChanged = false;
-	}
-	// combine model transform with current camera matrix
-	//DirectX::XMMATRIX transform1 = Transform * re.camera.GetMatrix(re.GetWidth(), re.GetHeight());
-	UTL::matrix4x4f m1 = re.camera.GetMatrix(re.GetWidth(), re.GetHeight());
-	transform_directx = UTL::Multiply(m1, transform_model);
-	// now is the right time to change handedness?
-	UTL::Transpose(transform_directx);
-	// now is the time to make sure it is the right format for directx?
-
-	// transpose to match expected shader layout
-	//DirectX::XMMATRIX transform2 = DirectX::XMMatrixTranspose(transform1);
-
-	// mapping the constant buffer
 	D3D11_MAPPED_SUBRESOURCE MSR;
-
-	// map the transform buffer
-	// note that map and unmap ask for an Subresource, this is the index if multiple were input in the Set function for that resource
+	
+	// note that map and unmap ask for a Subresource, this is the index if multiple were input in the Set function for that resource
 	ERR::errorTracker.TestHR(re.GetImmediateContext()->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &MSR), __FILE__, __func__, __LINE__);
-	memcpy(MSR.pData, &transform_directx, sizeof(DirectX::XMMATRIX));
+	memcpy(MSR.pData, &shaderConstantBuffer, sizeof(G3D::shaderConstantBuffer));
 	re.GetImmediateContext()->Unmap(pConstantBuffer.Get(), 0u);
-
+	
 	// vertex buffer
 	const unsigned int VertexSize = sizeof(UTL::vector3f);
 	const UINT offset = 0u;
 	re.GetImmediateContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &VertexSize, &offset);
-
+	
 	// index buffer
 	re.GetImmediateContext()->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-
+	
 	// topology
 	re.GetImmediateContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
+	
 	// constant buffers
 	re.GetImmediateContext()->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
-
+	
 	// tell D3D11 to draw it on screen
 	re.GetImmediateContext()->DrawIndexed((UINT)indicesCache.size(), 0u, 0);
 
@@ -159,18 +158,7 @@ Do not pass deltas, pass final positions.
 */
 void G3D::Obj_WireFrame::UpdateBodyAndGlobalFrame(UTL::vector3f& attitude, UTL::vector3f& position, UTL::vector3f& scale)
 {
-
-
-	/*
-	NOTE: operating in RHR
-	*/
 	this->attitude = attitude;
 	this->position = position;
 	this->scale = scale;
-	flag9DOFChanged = true;
-	/*
-	Transform = DirectX::XMMatrixScaling(bodyCenteredAttitude.xScale, bodyCenteredAttitude.yScale, bodyCenteredAttitude.zScale) * DirectX::XMMatrixRotationRollPitchYaw(bodyCenteredAttitude.roll, bodyCenteredAttitude.pitch, bodyCenteredAttitude.yaw)
-		* DirectX::XMMatrixTranslation(globalFrame.x, globalFrame.y, globalFrame.z);
-	*/
-	
 }

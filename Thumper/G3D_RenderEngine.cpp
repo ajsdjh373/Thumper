@@ -43,7 +43,7 @@ N/A
 G3D::RenderEngine::RenderEngine(HWND hWnd, const unsigned short Width, const unsigned short Height) :
 	Height{ Height },
 	Width{ Width },
-	camera{ { 0, 0, 0 }, {0, 0, 0}, 0.1f, 1000.0f, 80.0f }
+	camera{ { 0, 0, 0 }, {0, 0, 0}, 0.1f, 1000.0f, UTL::pi/3 }
 {
 	// create device and swap chain
 	UINT DeviceFlags = 0u;

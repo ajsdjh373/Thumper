@@ -85,74 +85,49 @@ Safeties and known issues:
 - N/A
 
 */
-UTL::matrix4x4f G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
-{
-	/*
-	NOTE: operating in RHR
-	*/
-	/*
-	DirectX::XMVECTOR orientationQuat =
-		DirectX::XMQuaternionRotationRollPitchYaw(
-			bodyCenteredAttitude.roll,
-			bodyCenteredAttitude.pitch,
-			bodyCenteredAttitude.yaw
-		);
+//UTL::matrix4x4f G3D::Camera::GetMatrix(unsigned short widthInPixels, unsigned short heightInPixels) const noexcept
+//{
+//	//UTL::vector4f q_base = UTL::QuaternionFromEuler(attitude);
+//	//UTL::vector4f q_rotation{ 0.70710677f, 0, 0.70710677f, 0 };
+//	//UTL::vector4f q = UTL::QuaternionMultiply(q_rotation, q_base);
+//	//UTL::vector3f newAttitude = { attitude.r1c1, attitude.r2c1 - UTL::pi / 2, attitude.r3c1 };
+//	//UTL::vector4f q = UTL::QuaternionFromEuler(newAttitude);
+//	//UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+//	//
+//	//// inverse quaternion, negate XYZ
+//	//q.r2c1 = -q.r2c1;
+//	//q.r3c1 = -q.r3c1;
+//	//q.r4c1 = -q.r4c1;
+//	//
+//	//UTL::matrix4x4f rotation = UTL::RotationFromQuaternion(q);
+//	//UTL::matrix4x4f basis =
+//	//{
+//	//	0, 0, -1, 0,
+//	//	0, 1, 0, 0,
+//	//	1, 0, 0, 0,
+//	//	0, 0, 0, 1
+//	//};
+//	//UTL::matrix4x4f view = UTL::Multiply(rotation, basis);
+//	//
+//	//UTL::vector3f invertedPosition = { -position.r1c1, -position.r2c1, -position.r3c1 };
+//	//UTL::matrix4x4f translation = UTL::TranslationFromVector(invertedPosition);
+//	//
+//	//UTL::matrix4x4f transform = UTL::Multiply(view, translation);
+//	//
+//	//float aspectRatio = (float)widthInPixels / (float)heightInPixels;
+//	//UTL::matrix4x4f projection =
+//	//{
+//	//	1 / (aspectRatio * std::tan(fov / 2)), 0, 0, 0,
+//	//	0, 1 / (std::tan(fov / 2)), 0, 0,
+//	//	0, 0, farPlane / (farPlane - nearPlane), -farPlane * nearPlane / (farPlane - nearPlane),
+//	//	0, 0, 1, 0
+//	//};
+//	//transform = UTL::Multiply(projection, transform);
+//	//
+//	//return transform;
+//	return { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//}
 
-	// inverse rotation
-	DirectX::XMVECTOR invQuat = DirectX::XMQuaternionInverse(orientationQuat);
-
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationQuaternion(invQuat);
-
-	DirectX::XMMATRIX pointDownPlusX = DirectX::XMMatrixRotationY(-DirectX::XM_PIDIV2);
-
-	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(
-			-globalFrame.x,
-			-globalFrame.y,
-			-globalFrame.z
-		);
-
-	//DirectX::XMMATRIX viewMatrix = rotationMatrix * translationMatrix;
-	DirectX::XMMATRIX viewMatrix = translationMatrix * rotationMatrix * pointDownPlusX;
-
-	// build projection matrix from camera properties
-	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
-	float nearPlaneHeight = 2.0f * nearPlane * (float)tan(0.5f * fovDegrees * UTL::pi / 180.0f);
-	float nearPlaneWidth = nearPlaneHeight * aspectRatio;
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveLH(
-		nearPlaneWidth,
-		nearPlaneHeight,
-		nearPlane,
-		farPlane
-	);
-
-	return viewMatrix * projectionMatrix;
-	*/
-
-	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
-
-	// inverse quaternion, negate XYZ
-	q.r2c1 = -q.r2c1;
-	q.r3c1 = -q.r3c1;
-	q.r4c1 = -q.r4c1;
-
-	UTL::matrix4x4f rotation = UTL::RotationFromQuaternion(q);
-
-	UTL::vector3f invertedPosition = { -position.r1c1, -position.r2c1, -position.r3c1 };
-	UTL::matrix4x4f translation = UTL::TranslationFromVector(invertedPosition);
-	UTL::matrix4x4f transform = UTL::Multiply(translation, rotation);
-	float aspectRatio = (float)widthInPixels / (float)heightInPixels;
-	UTL::matrix4x4f projection =
-	{
-		1 / (aspectRatio * std::tan(fov / 2)), 0, 0, 0,
-		0, 1 / (std::tan(fov / 2)), 0, 0,
-		0, 0, farPlane / (farPlane - nearPlane), -farPlane * nearPlane / (farPlane - nearPlane),
-		0, 0, 1, 0
-	};
-	transform = UTL::Multiply(projection, transform);
-
-	return transform;
-
-}
 
 /*
 Function for generating a vector and a point that represents a line passing

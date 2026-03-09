@@ -27,20 +27,11 @@ int CALLBACK WinMain(
 		mainWin.SetTitle(L"test 2");
 
 		// matrix math testing
-		UTL::matrix3x3f m1{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-		UTL::matrix3x3f m2{ 10, 20, 30, 40, 50, 60, 70, 80, 90 };
-		UTL::matrix3x3f m3 = UTL::Multiply(m1, m2);
-		UTL::vector3f v1{ 10, 20, 30 };
-		UTL::vector3f v2 = UTL::Multiply(m1, v1);
-		UTL::Transpose(m1);
-		UTL::matrix4x4f m4{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-		UTL::matrix4x4f m5{ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160 };
-		UTL::matrix4x4f m6 = UTL::Multiply(m4, m5);
-		UTL::vector4f v3{ 10, 20, 30, 40 };
-		UTL::vector4f v4 = UTL::Multiply(m4, v3);
-		UTL::vector3f testAttitude{ 1, 1, 1};
-		UTL::vector4f q = UTL::QuaternionFromEuler(testAttitude);
-		UTL::matrix4x4f m7 = UTL::RotationFromQuaternion(q);
+		//UTL::vector3f attitude{ 0, -UTL::pi / 4, UTL::pi / 4 };
+		//UTL::vector3f baseVector{ 1, 0, 0 };
+		//UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+		//UTL::matrix3x3f rotation = UTL::RotationFromQuaternion(q);
+		//UTL::vector3f rotatedVector = UTL::Multiply(rotation, baseVector);
 
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
@@ -56,7 +47,7 @@ int CALLBACK WinMain(
 			0, 1, 2
 		};
 		G3D::Obj_WireFrame wireFrameObject{ vertixXYZ ,indexData, renderEngine };
-		UTL::vector3f objPosition = { 0, 0, 0 };
+		UTL::vector3f objPosition = { 5, 0, 0 };
 		UTL::vector3f objAttitude = { 0, 0, 0 };
 		UTL::vector3f objScale = { 1, 1, 1 };
 		wireFrameObject.UpdateBodyAndGlobalFrame(objAttitude, objPosition, objScale);
@@ -159,7 +150,7 @@ int CALLBACK WinMain(
 			}
 			
 			// G3D testing
-			renderEngine.camera.Update(cameraAttitude, cameraPosition);
+			renderEngine.camera.Update(cameraAttitude, cameraPosition, 0.1f, 1000.0f, UTL::pi / 3);
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();
