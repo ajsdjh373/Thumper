@@ -73,7 +73,7 @@ namespace UTL
 		float r4c4 = 0;
 	};
 
-	void ConvertBetweenHandedness(UTL::vector3f& v) noexcept;
+	//void ConvertBetweenHandedness(UTL::vector3f& v) noexcept;
 	vector3f Add(vector3f& v1, vector3f& v2) noexcept; // good
 	matrix3x3f Multiply(matrix3x3f& m1, matrix3x3f& m2) noexcept;
 	matrix4x4f Multiply(matrix4x4f& m1, matrix4x4f& m2) noexcept;
@@ -84,9 +84,5 @@ namespace UTL
 	vector4f QuaternionMultiply(vector4f& q1, vector4f& q2) noexcept;
 	vector4f QuaternionFromEuler(const vector3f& attitude) noexcept; // good
 	matrix3x3f RotationFromQuaternion(vector4f& q) noexcept; // good
-	matrix4x4f TransformFromRotation(matrix4x4f& rotation, vector3f& position) noexcept;
-	matrix4x4f ScaleFromVector(vector3f& scale) noexcept;
-	matrix4x4f TranslationFromVector(vector3f& position) noexcept;
-	void Transpose(matrix3x3f& m) noexcept;
-	void Transpose(matrix4x4f& m) noexcept;
+
 }

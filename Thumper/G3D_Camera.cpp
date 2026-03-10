@@ -32,47 +32,6 @@ G3D::Camera::Camera(UTL::vector3f attitude, UTL::vector3f position, float nearPl
 {}
 
 /*
-Immediately updates the camera attitude.
-
-Arguments:
-attitude		new attitude
-
-Return:
-N/A
-
-Safeties and known issues:
-- N/A
-
-*/
-void G3D::Camera::Update(UTL::vector3f attitude, UTL::vector3f position)
-{
-	this->attitude = attitude;
-	this->position = position;
-}
-
-/*
-Immediately updates the camera attitude.
-
-Arguments:
-attitude		new attitude
-
-Return:
-N/A
-
-Safeties and known issues:
-- N/A
-
-*/
-void G3D::Camera::Update(UTL::vector3f attitude, UTL::vector3f position, float nearPlane, float farPlane, float fov)
-{
-	this->attitude = attitude;
-	this->position = position;
-	this->farPlane = farPlane;
-	this->nearPlane = nearPlane;
-	this->fov = fov;
-}
-
-/*
 Calculate and return the transform matrix associated with the camera.
 
 Arguments:

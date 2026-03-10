@@ -26,13 +26,6 @@ int CALLBACK WinMain(
 		std::string allReceivedKeys = "";
 		mainWin.SetTitle(L"test 2");
 
-		// matrix math testing
-		//UTL::vector3f attitude{ 0, -UTL::pi / 4, UTL::pi / 4 };
-		//UTL::vector3f baseVector{ 1, 0, 0 };
-		//UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
-		//UTL::matrix3x3f rotation = UTL::RotationFromQuaternion(q);
-		//UTL::vector3f rotatedVector = UTL::Multiply(rotation, baseVector);
-
 		// G3D testing
 		G3D::RenderEngine renderEngine(mainWin.GetHandle(), mainWin.width, mainWin.height);
 		// add a wire frame object
@@ -150,7 +143,11 @@ int CALLBACK WinMain(
 			}
 			
 			// G3D testing
-			renderEngine.camera.Update(cameraAttitude, cameraPosition, 0.1f, 1000.0f, UTL::pi / 3);
+			renderEngine.camera.attitude = cameraAttitude;
+			renderEngine.camera.position = cameraPosition;
+			renderEngine.camera.nearPlane = 0.1f;
+			renderEngine.camera.farPlane = 1000.0f;
+			renderEngine.camera.fov = UTL::pi / 3;
 			wireFrameShader.Draw(renderEngine);
 			wireFrameObject.Draw(renderEngine);
 			renderEngine.PresentFrame();
