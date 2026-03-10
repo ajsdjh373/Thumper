@@ -10,14 +10,14 @@ cbuffer cb : register(b0)
     // D3D11 rule: elements must align to 16 byte boundary!
     // float3x3 is 48 bytes because it is natively packed to be 3x4
     float3 translation; // XYZ translation
-    float pack1;
-    row_major float3x3 rotation; // row major rotation matrix
-    float3 scale; // scale in body frame
     float ft; // tan(vertical_fov/2)
+    row_major float3x3 rotation_bodyFrame; // row major rotation matrix
+    row_major float3x3 rotation_cameraFrame;
+    float3 scale; // scale in body frame
     float ar; // aspect ratio, w/h
     float a; // near/far plane operator a, a=f/(f-n)
     float b; // near/far plane operator b, b=f*n/(f-n)
-    float pack2;
+    float pack[2];
 }
 
 float4 main(float3 pos : Position) : SV_Position
@@ -34,13 +34,16 @@ float4 main(float3 pos : Position) : SV_Position
     v1[1] = pos[1] * scale[1];
     v1[2] = pos[2] * scale[2];
     
-    // rotate
-    v1 = mul(rotation, v1);
+    // rotate around the body
+    v1 = mul(rotation_bodyFrame, v1);
     
-    // translate
+    // translate to camera space
     v1[0] = v1[0] + translation[0];
     v1[1] = v1[1] + translation[1];
     v1[2] = v1[2] + translation[2];
+    
+    // rotate within camera space
+    v1 = mul(rotation_cameraFrame, v1);
     
     // cache x to use as W in return
     float w = v1[0];
@@ -64,16 +67,3 @@ float4 main(float3 pos : Position) : SV_Position
     return float4(v1[1], v1[2], v1[0], w);
     
 }
-
-
-/*
-cbuffer CBuf : register(b0)
-{
-	matrix transform;
-};
-
-float4 main(float3 pos : Position) : SV_Position
-{
-	return mul(float4(pos, 1.0f), transform);
-}
-*/

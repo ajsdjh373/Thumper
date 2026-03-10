@@ -106,20 +106,45 @@ ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re)
 	UTL::vector3f v;
 	v = UTL::Negate(re.camera.position);
 	shaderConstantBuffer.translation = UTL::Add(position, v);
+
+	// incorrect, just using q1 was last known state. Need to do this after translation
+	// I need to pass two rotation matrices to the shader - one for the object's frame, one for the camera's frame
+	// scale > body frame rotation > translate > camera frame rotation > projection matrix
+	// the inversion may be right, though
+	//UTL::vector4f q1 = UTL::QuaternionFromEuler(attitude);
+	//UTL::vector4f q2 = UTL::QuaternionFromEuler(re.camera.attitude);
+	//q2 = { q2.r1c1, -q2.r2c1, -q2.r3c1, -q2.r4c1 };
+	//UTL::vector4f q3 = UTL::QuaternionMultiply(q2, q1);
+	//UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q3);
+	
 	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
 	UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q);
-	shaderConstantBuffer.rotation[0] = rotationMatrix.r1c1;
-	shaderConstantBuffer.rotation[1] = rotationMatrix.r1c2;
-	shaderConstantBuffer.rotation[2] = rotationMatrix.r1c3;
-	shaderConstantBuffer.rotation[3] = 0;
-	shaderConstantBuffer.rotation[4] = rotationMatrix.r2c1;
-	shaderConstantBuffer.rotation[5] = rotationMatrix.r2c2;
-	shaderConstantBuffer.rotation[6] = rotationMatrix.r2c3;
-	shaderConstantBuffer.rotation[7] = 0;
-	shaderConstantBuffer.rotation[8] = rotationMatrix.r3c1;
-	shaderConstantBuffer.rotation[9] = rotationMatrix.r3c2;
-	shaderConstantBuffer.rotation[10] = rotationMatrix.r3c3;
-	shaderConstantBuffer.rotation[11] = 0;
+	shaderConstantBuffer.rotation_bodyFrame[0] = rotationMatrix.r1c1;
+	shaderConstantBuffer.rotation_bodyFrame[1] = rotationMatrix.r1c2;
+	shaderConstantBuffer.rotation_bodyFrame[2] = rotationMatrix.r1c3;
+	shaderConstantBuffer.rotation_bodyFrame[3] = 0;
+	shaderConstantBuffer.rotation_bodyFrame[4] = rotationMatrix.r2c1;
+	shaderConstantBuffer.rotation_bodyFrame[5] = rotationMatrix.r2c2;
+	shaderConstantBuffer.rotation_bodyFrame[6] = rotationMatrix.r2c3;
+	shaderConstantBuffer.rotation_bodyFrame[7] = 0;
+	shaderConstantBuffer.rotation_bodyFrame[8] = rotationMatrix.r3c1;
+	shaderConstantBuffer.rotation_bodyFrame[9] = rotationMatrix.r3c2;
+	shaderConstantBuffer.rotation_bodyFrame[10] = rotationMatrix.r3c3;
+	shaderConstantBuffer.rotation_bodyFrame[11] = 0;
+	q = UTL::QuaternionFromEuler(re.camera.attitude);
+	rotationMatrix = UTL::RotationFromQuaternion(q);
+	shaderConstantBuffer.rotation_cameraFrame[0] = rotationMatrix.r1c1;
+	shaderConstantBuffer.rotation_cameraFrame[1] = rotationMatrix.r1c2;
+	shaderConstantBuffer.rotation_cameraFrame[2] = rotationMatrix.r1c3;
+	shaderConstantBuffer.rotation_cameraFrame[3] = 0;
+	shaderConstantBuffer.rotation_cameraFrame[4] = rotationMatrix.r2c1;
+	shaderConstantBuffer.rotation_cameraFrame[5] = rotationMatrix.r2c2;
+	shaderConstantBuffer.rotation_cameraFrame[6] = rotationMatrix.r2c3;
+	shaderConstantBuffer.rotation_cameraFrame[7] = 0;
+	shaderConstantBuffer.rotation_cameraFrame[8] = rotationMatrix.r3c1;
+	shaderConstantBuffer.rotation_cameraFrame[9] = rotationMatrix.r3c2;
+	shaderConstantBuffer.rotation_cameraFrame[10] = rotationMatrix.r3c3;
+	shaderConstantBuffer.rotation_cameraFrame[11] = 0;
 	shaderConstantBuffer.ar = re.GetWidth() / re.GetHeight();
 	shaderConstantBuffer.ft = tan(re.camera.fov / 2);
 	shaderConstantBuffer.a = re.camera.farPlane / (re.camera.farPlane - re.camera.nearPlane);

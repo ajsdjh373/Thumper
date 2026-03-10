@@ -110,19 +110,19 @@ int CALLBACK WinMain(
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
 			{
-				cameraPosition.r2c1 += 0.01;
+				cameraPosition.r2c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
 			{
-				cameraPosition.r2c1 -= 0.01;
+				cameraPosition.r2c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
 			{
-				cameraPosition.r3c1 += 0.01;
+				cameraPosition.r3c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
 			{
-				cameraPosition.r3c1 -= 0.01;
+				cameraPosition.r3c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{

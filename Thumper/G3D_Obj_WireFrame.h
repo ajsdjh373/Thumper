@@ -25,15 +25,14 @@ namespace G3D
 	{
 		// refer to wire WireFrameVS.hlsl for the meaning of each variable
 		UTL::vector3f translation = { 0, 0, 0 };
-		float pack1 = 0;
-		float rotation[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		UTL::vector3f scale = { 0, 0, 0 };
 		float ft = 0;
+		float rotation_bodyFrame[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		float rotation_cameraFrame[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		UTL::vector3f scale = { 0, 0, 0 };
 		float ar = 0;
 		float a = 0;
 		float b = 0;
-		float pack2 = 0;
-
+		float pack[2] = { 0, 0 };
 	};
 }
 
@@ -51,6 +50,9 @@ public:
 private:
 
 public:
+	UTL::vector3f attitude;
+	UTL::vector3f position;
+	UTL::vector3f scale;
 
 private:
 	std::vector<UTL::vector3f> verticesCache;
@@ -59,8 +61,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
 	shaderConstantBuffer shaderConstantBuffer;
-	UTL::vector3f attitude;
-	UTL::vector3f position;
-	UTL::vector3f scale;
+	
 
 };
