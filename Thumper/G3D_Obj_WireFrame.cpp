@@ -106,17 +106,6 @@ ERR::ErrorCodes G3D::Obj_WireFrame::Draw(G3D::RenderEngine& re)
 	UTL::vector3f v;
 	v = UTL::Negate(re.camera.position);
 	shaderConstantBuffer.translation = UTL::Add(position, v);
-
-	// incorrect, just using q1 was last known state. Need to do this after translation
-	// I need to pass two rotation matrices to the shader - one for the object's frame, one for the camera's frame
-	// scale > body frame rotation > translate > camera frame rotation > projection matrix
-	// the inversion may be right, though
-	//UTL::vector4f q1 = UTL::QuaternionFromEuler(attitude);
-	//UTL::vector4f q2 = UTL::QuaternionFromEuler(re.camera.attitude);
-	//q2 = { q2.r1c1, -q2.r2c1, -q2.r3c1, -q2.r4c1 };
-	//UTL::vector4f q3 = UTL::QuaternionMultiply(q2, q1);
-	//UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q3);
-	
 	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
 	UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q);
 	shaderConstantBuffer.rotation_bodyFrame[0] = rotationMatrix.r1c1;

@@ -5,14 +5,14 @@ Module: UTL
 Multipurpose utilitarian data structures.
 
 All the math in this library follows these conventions:
--RHR coordinates
 -Quaternions store in WXYZ format
 -attitude is stored in RPY format
--Roll is rotation around x axis in body frame of reference, 0 aligns with the XY plane
--Pitch is rotation around y axis in body frame of reference, 0 aligns with the XY plane
--Yaw is rotation around z axis in body frame of reference, 0 is the XZ plane
+-Roll is rotation around x axis, 0 aligns with the XY plane
+-Pitch is rotation around y axis, 0 aligns with the XY plane
+-Yaw is rotation around z axis, 0 is the XZ plane
 -Radians for angles
 -Matrices are row major (column vectors)
+-All functions implement right handed operations - although most vector operations don't depend on handedness. Note that the shader is where the internal handedness convention is converted into the screenspace.
 
 Known bugs and limitations:
 - N/A
@@ -74,15 +74,17 @@ namespace UTL
 	};
 
 	//void ConvertBetweenHandedness(UTL::vector3f& v) noexcept;
-	vector3f Add(vector3f& v1, vector3f& v2) noexcept; // good
-	matrix3x3f Multiply(matrix3x3f& m1, matrix3x3f& m2) noexcept;
-	matrix4x4f Multiply(matrix4x4f& m1, matrix4x4f& m2) noexcept;
-	vector3f Multiply(matrix3x3f& m1, vector3f& v1) noexcept;
-	vector4f Multiply(matrix4x4f& m1, vector4f& v1) noexcept;
-	vector3f Multiply(matrix3x3f& m, float scalar) noexcept;
-	vector3f Negate(vector3f& v) noexcept; // good
-	vector4f QuaternionMultiply(vector4f& q1, vector4f& q2) noexcept;
+	vector3f Add(const vector3f& v1, const vector3f& v2) noexcept; // good
+	matrix3x3f Multiply(const matrix3x3f& m1, const matrix3x3f& m2) noexcept;
+	matrix4x4f Multiply(const matrix4x4f& m1, const matrix4x4f& m2) noexcept;
+	vector3f Multiply(const matrix3x3f& m1, const vector3f& v1) noexcept;
+	vector4f Multiply(const matrix4x4f& m1, const vector4f& v1) noexcept;
+	vector3f Multiply(const matrix3x3f& m, const float scalar) noexcept;
+	vector3f Negate(const vector3f& v) noexcept; // good
+	vector4f QuaternionMultiply(const vector4f& q1, const vector4f& q2) noexcept;
 	vector4f QuaternionFromEuler(const vector3f& attitude) noexcept; // good
-	matrix3x3f RotationFromQuaternion(vector4f& q) noexcept; // good
+	vector3f UnitVectorFromEuler(const vector3f& attitude) noexcept;
+	vector3f RotateVectorByInverseEuler(const vector3f& attitude, const vector3f vector) noexcept;
+	matrix3x3f RotationFromQuaternion(const vector4f& q) noexcept; // good
 
 }

@@ -48,7 +48,7 @@ int CALLBACK WinMain(
 
 		// camera
 		UTL::vector3f cameraPosition{ 0.0f, 0.0f, 0.0f };
-		UTL::vector3f cameraAttitude{0.0f, 0.0f, 0.0f};
+		UTL::vector3f cameraAttitude{ 0.0f, 0.0f, 0.0f };
 
 		// main loop
 		while (true)
@@ -93,29 +93,30 @@ int CALLBACK WinMain(
 			}
 
 			// camera keyboard controls
+			cameraPosition = { 0, 0, 0 };
 			if (mainWin.kbd.CheckASCII(KBDASCII::w)->Down)
 			{
-				cameraPosition.r1c1 += 0.01;
+				cameraPosition.r1c1 += 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::s)->Down)
 			{
-				cameraPosition.r1c1 -= 0.01;
+				cameraPosition.r1c1 -= 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
 			{
-				cameraPosition.r2c1 -= 0.01;
+				cameraPosition.r2c1 -= 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
 			{
-				cameraPosition.r2c1 += 0.01;
+				cameraPosition.r2c1 += 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
 			{
-				cameraPosition.r3c1 -= 0.01;
+				cameraPosition.r3c1 -= 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
 			{
-				cameraPosition.r3c1 += 0.01;
+				cameraPosition.r3c1 += 0.1;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{
@@ -141,10 +142,12 @@ int CALLBACK WinMain(
 			{
 				cameraAttitude.r3c1 += 0.01;
 			}
+
+			cameraPosition = UTL::RotateVectorByInverseEuler(cameraAttitude, cameraPosition);
 			
 			// G3D testing
 			renderEngine.camera.attitude = cameraAttitude;
-			renderEngine.camera.position = cameraPosition;
+			renderEngine.camera.position = UTL::Add(cameraPosition, renderEngine.camera.position);
 			renderEngine.camera.nearPlane = 0.1f;
 			renderEngine.camera.farPlane = 1000.0f;
 			renderEngine.camera.fov = UTL::pi / 3;

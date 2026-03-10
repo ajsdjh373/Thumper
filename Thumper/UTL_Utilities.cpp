@@ -11,7 +11,7 @@ See associated header file for more information
 /*
 v1+v2=v3, v3 returned
 */
-UTL::vector3f UTL::Add(vector3f& v1, vector3f& v2) noexcept
+UTL::vector3f UTL::Add(const vector3f& v1, const vector3f& v2) noexcept
 {
 	vector3f v3;
 	v3.r1c1 = v1.r1c1 + v2.r1c1;
@@ -24,7 +24,7 @@ UTL::vector3f UTL::Add(vector3f& v1, vector3f& v2) noexcept
 /*
 m1 * m2 = m3, m3 returned.
 */
-UTL::matrix3x3f UTL::Multiply(matrix3x3f& m1, matrix3x3f& m2) noexcept
+UTL::matrix3x3f UTL::Multiply(const matrix3x3f& m1, const matrix3x3f& m2) noexcept
 {
 	UTL::matrix3x3f m3;
 	// rull of thumb: in RC notation the inside indices remain constant and equal to the destination rc indices while the outside indices are iterated on from 1 to n
@@ -47,7 +47,7 @@ UTL::matrix3x3f UTL::Multiply(matrix3x3f& m1, matrix3x3f& m2) noexcept
 /*
 m1 * m2 = m3, m3 returned.
 */
-UTL::matrix4x4f UTL::Multiply(matrix4x4f& m1, matrix4x4f& m2) noexcept
+UTL::matrix4x4f UTL::Multiply(const matrix4x4f& m1, const matrix4x4f& m2) noexcept
 {
 	UTL::matrix4x4f m3;
 	// rull of thumb: in RC notation the inside indices remain constant and equal to the destination rc indices while the outside indices are iterated on from 1 to n
@@ -78,7 +78,7 @@ UTL::matrix4x4f UTL::Multiply(matrix4x4f& m1, matrix4x4f& m2) noexcept
 /*
 v2 = m1 * v1, v2 returned.
 */
-UTL::vector3f UTL::Multiply(matrix3x3f& m1, vector3f& v1) noexcept
+UTL::vector3f UTL::Multiply(const matrix3x3f& m1, const vector3f& v1) noexcept
 {
 	// for M3=M1*M2, M3​[i,j] = ∑ from k=1 to n​ (M1​[i,k]⋅M2​[k,j]) where i and j and the row and column indices
 	vector3f v2;
@@ -92,7 +92,7 @@ UTL::vector3f UTL::Multiply(matrix3x3f& m1, vector3f& v1) noexcept
 /*
 v2 = m1 * v1, v2 returned.
 */
-UTL::vector4f UTL::Multiply(matrix4x4f& m1, vector4f& v1) noexcept
+UTL::vector4f UTL::Multiply(const matrix4x4f& m1, const vector4f& v1) noexcept
 {
 	// for M3=M1*M2, M3​[i,j] = ∑ from k=1 to n​ (M1​[i,k]⋅M2​[k,j]) where i and j and the row and column indices
 	vector4f v2;
@@ -107,7 +107,7 @@ UTL::vector4f UTL::Multiply(matrix4x4f& m1, vector4f& v1) noexcept
 /*
 v2 = v * scalar, v2 returned
 */
-UTL::vector3f UTL::Multiply(matrix3x3f& m, float scalar) noexcept
+UTL::vector3f UTL::Multiply(const matrix3x3f& m, const float scalar) noexcept
 {
 	vector3f v2;
 	v2.r1c1 = m.r1c1 * scalar;
@@ -119,7 +119,7 @@ UTL::vector3f UTL::Multiply(matrix3x3f& m, float scalar) noexcept
 /*
 Returns -v
 */
-UTL::vector3f UTL::Negate(vector3f& v) noexcept
+UTL::vector3f UTL::Negate(const vector3f& v) noexcept
 {
 	return { -v.r1c1, -v.r2c1, -v.r3c1 };
 }
@@ -127,7 +127,7 @@ UTL::vector3f UTL::Negate(vector3f& v) noexcept
 /*
 Multiplies two quaternions together. q1*q2=q3, q3 returned.
 */
-UTL::vector4f UTL::QuaternionMultiply(vector4f& q1, vector4f& q2) noexcept
+UTL::vector4f UTL::QuaternionMultiply(const vector4f& q1, const vector4f& q2) noexcept
 {
 	vector4f q3;
 	q3.r1c1 = q1.r1c1 * q2.r1c1 - q1.r2c1 * q2.r2c1 - q1.r3c1 * q2.r3c1 - q1.r4c1 * q2.r4c1;
@@ -160,9 +160,35 @@ UTL::vector4f UTL::QuaternionFromEuler(const vector3f& attitude) noexcept
 }
 
 /*
+Rotates {1,0,0} by the euler angles in attitude.
+*/
+UTL::vector3f UTL::UnitVectorFromEuler(const vector3f& attitude) noexcept
+{
+	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+	UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q);
+	UTL::vector3f v = { 1, 0, 0 };
+	v = Multiply(rotationMatrix, v);
+	return v;
+}
+
+/*
+Rotates the vector by the euler angles in attitude.
+*/
+UTL::vector3f UTL::RotateVectorByInverseEuler(const vector3f& attitude, const vector3f vector) noexcept
+{
+	UTL::vector4f q = UTL::QuaternionFromEuler(attitude);
+	q.r2c1 = -q.r2c1;
+	q.r3c1 = -q.r3c1;
+	q.r4c1 = -q.r4c1;
+	UTL::matrix3x3f rotationMatrix = UTL::RotationFromQuaternion(q);
+	UTL::vector3f v = Multiply(rotationMatrix, vector);
+	return v;
+}
+
+/*
 Returns a rotation matrix. This only converts a quaternion to a 4x4 matrix. It does not apply a rotation.
 */
-UTL::matrix3x3f UTL::RotationFromQuaternion(vector4f& q) noexcept
+UTL::matrix3x3f UTL::RotationFromQuaternion(const vector4f& q) noexcept
 {
 	matrix3x3f m;
 	m.r1c1 = 1 - 2 * (q.r3c1 * q.r3c1 + q.r4c1 * q.r4c1);
