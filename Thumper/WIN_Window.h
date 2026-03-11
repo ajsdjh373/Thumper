@@ -18,6 +18,7 @@ Known bugs and limitations:
 namespace WIN
 {
 	class Window;
+	void DebugLogMessage(UINT msg, WPARAM wParam, LPARAM lParam);
 }
 
 class WIN::Window

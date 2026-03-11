@@ -96,27 +96,27 @@ int CALLBACK WinMain(
 			cameraPosition = { 0, 0, 0 };
 			if (mainWin.kbd.CheckASCII(KBDASCII::w)->Down)
 			{
-				cameraPosition.r1c1 += 0.1;
+				cameraPosition.r1c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::s)->Down)
 			{
-				cameraPosition.r1c1 -= 0.1;
+				cameraPosition.r1c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::a)->Down)
 			{
-				cameraPosition.r2c1 -= 0.1;
+				cameraPosition.r2c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::d)->Down)
 			{
-				cameraPosition.r2c1 += 0.1;
+				cameraPosition.r2c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::r)->Down)
 			{
-				cameraPosition.r3c1 -= 0.1;
+				cameraPosition.r3c1 -= 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::f)->Down)
 			{
-				cameraPosition.r3c1 += 0.1;
+				cameraPosition.r3c1 += 0.01;
 			}
 			if (mainWin.kbd.CheckASCII(KBDASCII::W)->Down)
 			{

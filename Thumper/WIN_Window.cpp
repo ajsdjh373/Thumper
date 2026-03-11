@@ -11,6 +11,28 @@ See associated header file for more information
 #include <stdexcept>
 
 /*
+Debug logger for windows messages. This will output to a debug output listener if one is present. Otherwise, it does nothing.
+*/
+#ifdef _DEBUG
+#include <sstream>
+static void WIN::DebugLogMessage(UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	std::wostringstream oss;
+	switch (msg)
+	{
+	case WM_KEYDOWN:    oss << L"WM_KEYDOWN   wParam: " << wParam << L" lParam: " << lParam << L"\n"; break;
+	case WM_KEYUP:      oss << L"WM_KEYUP     wParam: " << wParam << L" lParam: " << lParam << L"\n"; break;
+	case WM_SYSKEYDOWN: oss << L"WM_SYSKEYDOWN wParam: " << wParam << L" lParam: " << lParam << L"\n"; break;
+	case WM_SYSKEYUP:   oss << L"WM_SYSKEYUP  wParam: " << wParam << L" lParam: " << lParam << L"\n"; break;
+	case WM_KILLFOCUS:  oss << L"WM_KILLFOCUS\n"; break;
+	case WM_SETFOCUS:   oss << L"WM_SETFOCUS\n"; break;
+	default: return; // return early to avoid calling OutputDebugString on untracked messages
+	}
+	OutputDebugStringW(oss.str().c_str());
+}
+#endif
+
+/*
 Constructor
 
 Arguments:
@@ -255,8 +277,9 @@ Safeties and known issues:
 LRESULT WIN::Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
 	// debug message viewing
-	//static WindowsMessageMap mm;
-	//OutputDebugString(mm(msg, lParam, wParam).c_str());
+#ifdef _DEBUG
+	WIN::DebugLogMessage(msg, wParam, lParam);
+#endif
 
 	std::unique_ptr<MS::Button> Holder;
 	int X;
