@@ -5,6 +5,7 @@
 #include "WIN_Window.h"
 #include "G3D_Include.h"
 #include "ERR_ErrorEngine.h"
+#include "AST_Core.h"
 
 int CALLBACK WinMain(
 	HINSTANCE hInstance,
@@ -46,9 +47,13 @@ int CALLBACK WinMain(
 		wireFrameObject.UpdateBodyAndGlobalFrame(objAttitude, objPosition, objScale);
 		G3D::Shader_WireFrame wireFrameShader{ renderEngine };
 
-		// camera
 		UTL::vector3f cameraPosition{ 0.0f, 0.0f, 0.0f };
 		UTL::vector3f cameraAttitude{ 0.0f, 0.0f, 0.0f };
+
+		// AST testing
+		AST::G1 cube;
+		int returnCode = -1;
+		returnCode = cube.OpenCopy("cube.G1");
 
 		// main loop
 		while (true)

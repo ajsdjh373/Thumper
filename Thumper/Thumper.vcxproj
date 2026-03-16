@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AST_Core.cpp" />
     <ClCompile Include="ERR_ErrorEngine.cpp" />
     <ClCompile Include="G3D_Camera.cpp" />
     <ClCompile Include="G3D_Obj_WireFrame.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="WIN_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AST_Core.h" />
     <ClInclude Include="ERR_ErrorEngine.h" />
     <ClInclude Include="G3D_Camera.h" />
     <ClInclude Include="G3D_Include.h" />

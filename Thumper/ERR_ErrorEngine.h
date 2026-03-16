@@ -27,6 +27,14 @@ namespace ERR
 		okay = 0,
 		actionFailed = 1,
 		hrFailed = 2,
+		incompleteTriangleGeometryData = 16,
+		incompleteVectorData = 17,
+		invalidWindowsFileName = 18,
+		invalidFileExtension = 19,
+		fileCannotBeOpened = 20,
+		fileReadingError = 21,
+		fileCorrupted = 22,
+		bigEndianData = 23
 	};
 }
 
@@ -46,6 +54,7 @@ class ERR::ErrorEngine
 		ErrorEngine();
 		~ErrorEngine();
 		ERR::ErrorCodes PrintToLog(std::string output);
+		ERR::ErrorCodes PrintToLog(std::string output, const char* file, const char* function, int line);
 		ERR::ErrorCodes TestHR(HRESULT HR);
 		ERR::ErrorCodes TestHR(HRESULT HR, const char* file, const char* function, int line);
 

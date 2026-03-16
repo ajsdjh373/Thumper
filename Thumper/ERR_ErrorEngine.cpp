@@ -93,6 +93,23 @@ ERR::ErrorCodes ERR::ErrorEngine::PrintToLog(std::string output)
 }
 
 /*
+Immediately attempts to write a string to the log file, including the location of the function call.
+Use __FILE__, __func__, __LINE__.
+*/
+ERR::ErrorCodes ERR::ErrorEngine::PrintToLog(std::string output, const char* file, const char* function, int line)
+{
+    std::scoped_lock(logFileLock);
+    try
+    {
+        logFile << MakeTimestamp() << output + " | called at " + file + " " + function + " " + std::to_string(line) << std::endl;
+        return ERR::ErrorCodes::okay;
+    }
+    catch (...)
+    {
+        return ERR::ErrorCodes::actionFailed;
+    }
+}
+/*
 Processes a windows HRESULT and returns an error code based on the result. If HR fails, it logs the HR and where it failed.
 
 Arguments:
