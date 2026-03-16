@@ -203,3 +203,24 @@ UTL::matrix3x3f UTL::RotationFromQuaternion(const vector4f& q) noexcept
 
 	return m;
 }
+
+/*
+Converts vectors v1, v2, v3 into one vector of v1[0], v2[0], v3[0], v1[1], v2[1], v3[1]...
+Returns actionFailed if the vectors are not the same length.
+*/
+ERR::ErrorCodes UTL::InterleaveVectors(const std::vector<float>& v1, const std::vector<float>& v2, const std::vector<float>& v3, std::vector<UTL::vector3f>& output)
+{
+	if ((v1.size() == v2.size()) && (v1.size() == v3.size()))
+	{
+		output.resize(v1.size());
+		for (int i = 0; i < v1.size(); i++)
+		{
+			output[i].r1c1 = v1[i];
+			output[i].r2c1 = v2[i];
+			output[i].r3c1 = v3[i];
+		}
+		return ERR::ErrorCodes::okay;
+	}
+
+	return ERR::ErrorCodes::actionFailed;
+}

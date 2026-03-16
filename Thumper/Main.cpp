@@ -55,6 +55,12 @@ int CALLBACK WinMain(
 		int returnCode = -1;
 		returnCode = cube.OpenCopy("cube.G1");
 
+		std::vector<UTL::vector3f> cubeVertices;
+		UTL::InterleaveVectors(cube.vertexX, cube.vertexY, cube.vertexZ, cubeVertices);
+		std::vector<UTL::vector3f> cubeIndices;
+		G3D::Obj_WireFrame cubeObject{ cubeVertices, cube.indices, renderEngine };
+		cubeObject.UpdateBodyAndGlobalFrame(objAttitude, objPosition, objScale);
+
 		// main loop
 		while (true)
 		{
@@ -157,7 +163,7 @@ int CALLBACK WinMain(
 			renderEngine.camera.farPlane = 1000.0f;
 			renderEngine.camera.fov = UTL::pi / 3;
 			wireFrameShader.Draw(renderEngine);
-			wireFrameObject.Draw(renderEngine);
+			cubeObject.Draw(renderEngine);
 			renderEngine.PresentFrame();
 
 		};

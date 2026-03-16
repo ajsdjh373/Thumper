@@ -20,6 +20,7 @@ Known bugs and limitations:
 */
 
 #pragma once
+#include "ERR_ErrorEngine.h"
 
 namespace UTL
 {
@@ -87,4 +88,5 @@ namespace UTL
 	vector3f RotateVectorByInverseEuler(const vector3f& attitude, const vector3f vector) noexcept;
 	matrix3x3f RotationFromQuaternion(const vector4f& q) noexcept; // good
 
+	ERR::ErrorCodes InterleaveVectors(const std::vector<float>& v1, const std::vector<float>& v2, const std::vector<float>& v3, std::vector<UTL::vector3f>& output);
 }
