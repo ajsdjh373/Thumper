@@ -55,6 +55,15 @@
     <Filter Include="UTL\Source Files">
       <UniqueIdentifier>{f79edab3-c685-4113-b37a-11c89905e9c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AST">
+      <UniqueIdentifier>{4fe92f21-cc81-459b-a884-1c37b3ce86e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AST\Header Files">
+      <UniqueIdentifier>{dae786b0-de08-4e11-924e-36b24e40a923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AST\Source Files">
+      <UniqueIdentifier>{6a8fe9bd-5d94-4525-b491-71bed88ace16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -87,19 +96,16 @@
     <ClCompile Include="UTL_Utilities.cpp">
       <Filter>UTL\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AST_Core.cpp">
+      <Filter>AST\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Standards.h">
-      <Filter>Unsorted\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WIN_Window.h">
       <Filter>WIN\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WIN_WinWrapper.h">
       <Filter>WIN\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ToDo.h">
-      <Filter>Unsorted\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WIN_Keyboard.h">
       <Filter>WIN\Header Files</Filter>
@@ -127,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="G3D_Shader_WireFrame.h">
       <Filter>G3D\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AST_Core.h">
+      <Filter>AST\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

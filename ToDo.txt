@@ -1,9 +1,23 @@
+COR
+- event system with time acceleration for the ticks (GetTickTime) and sprint mode (computing ticks as fast as possible without changing the timebase for the ticks in the simulation, decoupling ticks from real time)
+- state machine
+- start building the orbital simulation
+	- asset type for heavenly bodies, keplerian orbit event callback for physics (check output with numbers that I can plot in python)
+	- asset type for gravity affected objects with event callback for physics (check output with numbers that I can plot in python)
+	- asset type for a scene consisting of planets, gravity affected objects
+	- save file asset capable of saving and reloading a scene
+- build out system to render in a 3D map view (first view in the game!)
+	- symbols showing the planets
+	- orbit lines for the planets that can be toggled on and off
+	- gravity affected objects, able to be toggled on and off
+	- select a gravity affected object to show its orbit line
+		- click box asset data for gravity affected objects in the screen space
+		- system for click box detection and determining priority when stacked
 
-current
-- load a 3D object from a file (download a free one from the internet) (do with new module for asset read/write)
-- get the 3D object drawn on screen
+G3D
 - check both xyz and rpy for object transform
 - implement back culling (triangles facing away from the camera are not drawn)
+- change Obj_WireFrame to use a blank constructor to allow for preallocation in vectors. Add a flag for initialization and an initialization function
 
 later
 - clean comments to utilize word wrap instead of new lines

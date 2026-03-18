@@ -175,8 +175,6 @@
     <ClInclude Include="G3D_Obj_WireFrame.h" />
     <ClInclude Include="G3D_RenderEngine.h" />
     <ClInclude Include="G3D_Shader_WireFrame.h" />
-    <ClInclude Include="Standards.h" />
-    <ClInclude Include="ToDo.h" />
     <ClInclude Include="UTL_Utilities.h" />
     <ClInclude Include="WIN_Keyboard.h" />
     <ClInclude Include="WIN_Mouse.h" />

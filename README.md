@@ -35,11 +35,17 @@ Rules for comments and formatting are specified in STYLE.md.
 The project is designed with C++20 and compiled with MSVC.
 
 The project is organized into the following modules:
-- ERR (global), provides an easy way for to log errors or other notes to a central log file
+- ERR (global), provides an easy way to log errors or other notes to a central log file
 - WIN, responsible for handling most windows OS functions including the window itself, mouse, keyboard, and windows headers
+	- Dependent on ERR
 - G3D, responsible for 3D graphics
 	- Dependent on WIN, ERR
-- More to be added as development continues
+- UTL, mostly math utilities that are multi-functional
+	- Dependent on ERR
+- AST, responsible for reading and writing asset files
+	- Dependent on ERR
+- COR, responsible for memory management, timing, and engine workflow
+	- Dependent on everything? Update this once the module reaches its first milestone
 
 ## Building
 
